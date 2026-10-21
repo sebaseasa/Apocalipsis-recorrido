@@ -72,6 +72,18 @@ body {
   box-shadow: 0 0 8px #f2c46d;
 }
 
+.rotulo.candelero {
+  font-size: clamp(16px, 3.6vmin, 30px);
+  color: #f2c46d;
+  margin: -0.7em 0 0 0;
+  translate: -50% 0;
+  transform-origin: center;
+}
+
+.rotulo.candelero::before {
+  display: none;
+}
+
 .rotulo.isla {
   font-size: clamp(20px, 5vmin, 38px);
   color: #f2c46d;

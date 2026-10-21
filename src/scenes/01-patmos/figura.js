@@ -50,6 +50,7 @@ export function crearFigura(posicion) {
     sol: 0,
     mano: 0, // 0: diestra en alto con las estrellas; 1: extendida hacia Juan
     llaves: 0,
+    vuelo: [0, 0, 0, 0, 0, 0, 0], // 1:20: cada estrella va hacia su candelero
   };
 
   // Cuerpo: escultura real de Cristo con túnica hasta los pies (Sketchfab, ver CREDITS.md),
@@ -266,6 +267,13 @@ export function crearFigura(posicion) {
     estrellas.children.forEach((s, i) => {
       const a = t * 0.4 + (i * Math.PI * 2) / 7;
       s.position.set(Math.cos(a) * 0.2, Math.sin(t * 2 + i) * 0.03 + 0.04, Math.sin(a) * 0.2);
+      // Vuelo en arco desde la mano hasta encima de su candelero.
+      const v = e.vuelo[i];
+      if (v > 0 && destinos[i]) {
+        s.position.lerp(destinos[i], v);
+        s.position.y += Math.sin(v * Math.PI) * 0.6;
+      }
+      s.scale.setScalar(0.13 + v * 0.17);
       s.material.opacity = e.estrellas * (0.8 + Math.sin(t * 5 + i * 2) * 0.2);
     });
 
@@ -279,8 +287,18 @@ export function crearFigura(posicion) {
     brilloLlaves.material.opacity = e.llaves * 0.7;
   }
 
+  // Destinos de las estrellas (en el espacio del grupo de estrellas), a partir de puntos del mundo.
+  const destinos = [];
+  function apuntarEstrellas(puntosMundo) {
+    cuerpo.updateMatrixWorld(true);
+    puntosMundo.forEach((p, i) => (destinos[i] = estrellas.worldToLocal(p.clone())));
+  }
+
   function reiniciar() {
     for (const k of Object.keys(estado)) estado[k] = 0;
+    estado.vuelo = [0, 0, 0, 0, 0, 0, 0];
+    destinos.length = 0;
+    cuerpo.rotation.x = 0;
     grupo.position.copy(posicion);
   }
 
@@ -299,5 +317,5 @@ export function crearFigura(posicion) {
     return grupo.localToWorld(v);
   }
 
-  return { grupo, estado, actualizar, reiniciar, punto };
+  return { grupo, estado, actualizar, reiniciar, punto, apuntarEstrellas };
 }

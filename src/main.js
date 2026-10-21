@@ -132,6 +132,7 @@ renderer.setAnimationLoop(() => {
   const escena = enTierra ? mundo.tierra.escena : mundo.escena;
   const camara = enTierra ? mundo.tierra.camara : cam.camara;
   if (enTierra) mundo.tierra.actualizarRotulos();
+  else mundo.actualizarEtiquetas(cam.camara);
   pasoEscena.scene = escena;
   pasoEscena.camera = camara;
   if (usarBrillo) composer.render();

@@ -55,7 +55,37 @@ export function crearEscena() {
     });
   }
 
+  // Nombre de cada iglesia sobre su candelero (1:20), en el orden de Apocalipsis 2-3.
+  const IGLESIAS = ['Éfeso', 'Esmirna', 'Pérgamo', 'Tiatira', 'Sardis', 'Filadelfia', 'Laodicea'];
+  const contenedor = document.getElementById('rotulos');
+  const etiquetas = IGLESIAS.map((nombre, i) => {
+    const el = document.createElement('div');
+    el.className = 'rotulo iglesia candelero';
+    el.textContent = nombre;
+    contenedor.appendChild(el);
+    // Los candeleros se numeran de derecha a izquierda vistos desde la boca; Éfeso queda a la izquierda.
+    // Alturas alternadas para que los nombres no se monten en pantallas angostas.
+    return { el, punto: candeleros.posiciones[6 - i].clone().setY(i % 2 ? 2.85 : 2.3), visible: false };
+  });
+  const proy = new THREE.Vector3();
+
+  function mostrarIglesia(i, visible) {
+    etiquetas[i].visible = visible;
+    etiquetas[i].el.classList.toggle('visible', visible);
+  }
+
+  function actualizarEtiquetas(camara) {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    for (const e of etiquetas) {
+      if (!e.visible) continue;
+      proy.copy(e.punto).project(camara);
+      e.el.style.transform = `translate(${((proy.x + 1) / 2) * w}px, ${((1 - proy.y) / 2) * h}px)`;
+    }
+  }
+
   function reiniciar() {
+    etiquetas.forEach((_, i) => mostrarIglesia(i, false));
     candeleros.apagarTodo();
     figura.reiniciar();
     luzBoca.intensity = 40;
@@ -69,5 +99,8 @@ export function crearEscena() {
     figura.actualizar(t);
   }
 
-  return { escena, candeleros, figura, luzBoca, sol, atmosfera, mar, prepararReflejos, reiniciar, actualizar };
+  return {
+    escena, candeleros, figura, luzBoca, sol, atmosfera, mar, prepararReflejos, reiniciar, actualizar,
+    mostrarIglesia, actualizarEtiquetas,
+  };
 }

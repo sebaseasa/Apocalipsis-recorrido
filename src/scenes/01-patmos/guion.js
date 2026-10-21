@@ -5,7 +5,7 @@ import { esperarToque } from '../../core/controles.js';
 import * as audio from '../../core/audio.js';
 import { fundido, mostrarPaso, mostrarCierre, tocarCalidez, reiniciarCalidez } from '../../core/pantalla.js';
 
-// Guion de la escena 1 (Apocalipsis 1:9-18), en 7 momentos.
+// Guion de la escena 1 (Apocalipsis 1:9-20), en 8 momentos, con una introducción desde el espacio.
 // Al final de cada momento aparece "Toca para continuar".
 
 const ALTURA_OJOS = 1.6;
@@ -190,9 +190,9 @@ export async function recorrido(mundo, cam) {
 
   // "su rostro era como el sol cuando resplandece en su fuerza": retrocedemos ante la luz.
   audio.nivel('musica', 1, 4);
-  await juntos(leer('1:16', 1), acercarA(-12, 4), mirarA('centro', 3), animar(4, (p) => (e.sol = p)));
+  await juntos(leer('1:16', 1), acercarA(-12, 4), mirarA('centro', 3), animar(4, (p) => (e.sol = p * 0.65)));
   // Después del resplandor, la luz baja para que se vea su rostro.
-  animar(3, (p) => (e.sol = mezclar(1, 0.25, p)));
+  animar(3, (p) => (e.sol = mezclar(0.65, 0.25, p)));
   await esperarToque();
 
   // 6. "No temas": Juan cae como muerto, silencio, y Él pone su diestra sobre él (1:17-18).
@@ -279,9 +279,57 @@ export async function recorrido(mundo, cam) {
   })());
   await esperarToque();
 
-  // 7. Cierre: la luz llena la pantalla y aparece la pregunta.
+  // 7. El misterio de las siete estrellas y los siete candeleros (1:19-20).
   mostrarPaso(7);
   ocultarSubtitulo();
+  tocarCalidez(0, 3);
+  audio.nivel('musica', 0.7, 4);
+  // De pie, retrocedemos hacia la boca para ver todo el semicírculo.
+  {
+    const y0 = g.posicion.y;
+    const z0 = g.posicion.z;
+    const focoDesde = g.foco.clone();
+    const focoHasta = new THREE.Vector3(0, 1.3, -7.2);
+    // En pantallas angostas (celular doblado) retrocedemos más para que quepan los siete.
+    const zVista = cam.camara.aspect < 0.8 ? -18.3 : -16;
+    await juntos(
+      leer('1:19', 0),
+      animar(6, (p) => {
+        g.posicion.y = mezclar(y0, ALTURA_OJOS, p);
+        g.posicion.z = mezclar(z0, zVista, p);
+        g.foco.lerpVectors(focoDesde, focoHasta, p);
+      })
+    );
+  }
+
+  // "El misterio de las siete estrellas que has visto en mi diestra, y los siete candeleros de oro."
+  figura.apuntarEstrellas(candeleros.posiciones.map((p) => p.clone().setY(2.05)));
+  await leer('1:20', 0);
+
+  // "Las siete estrellas son los ángeles de las siete iglesias": cada estrella va a su candelero.
+  await juntos(leer('1:20', 1, 2), (async () => {
+    for (let i = 0; i < 7; i++) {
+      animar(2.4, (p) => (e.vuelo[i] = p));
+      audio.destello(i % 2 === 0);
+      await esperar(0.8);
+    }
+  })());
+
+  // "y los siete candeleros que has visto, son las siete iglesias": aparece cada nombre.
+  await juntos(leer('1:20', 2, 3), (async () => {
+    for (let i = 0; i < 7; i++) {
+      mundo.mostrarIglesia(i, true);
+      audio.encender(i);
+      animar(1.2, (p) => candeleros.encender(6 - i, 1 + Math.sin(p * Math.PI) * 0.6), lineal);
+      await esperar(0.9);
+    }
+  })());
+  await esperarToque();
+
+  // 8. Cierre: la luz llena la pantalla y aparece la pregunta.
+  mostrarPaso(8);
+  ocultarSubtitulo();
+  for (let i = 0; i < 7; i++) mundo.mostrarIglesia(i, false);
   audio.nivel('musica', 1, 5);
   tocarCalidez(0, 3);
   animar(5, (p) => (e.sol = 0.45 + p * 3));

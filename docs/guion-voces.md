@@ -1,6 +1,6 @@
-# Guion de voces · Escena 1 (Apocalipsis 1:9-18)
+# Guion de voces · Escena 1 (Apocalipsis 1:9-20)
 
-Para generar en ElevenLabs. Son **2 voces** y **21 frases**, más una opcional.
+Para generar en ElevenLabs. Son **2 voces** y **25 frases**, más una opcional.
 Cada frase es **un archivo MP3 aparte**, con el nombre exacto de la columna "Archivo".
 
 ## Las dos voces
@@ -46,7 +46,11 @@ Los subtítulos en pantalla siguen con la ortografía original de la Reina-Valer
 | 19 | `voz-c04.mp3` | Cristo | 1:17 | No temas: yo soy el primero y el último; |
 | 20 | `voz-c05.mp3` | Cristo | 1:18 | y el que vivo, y he sido muerto; y he aquí que vivo por siglos de siglos, Amén. |
 | 21 | `voz-c06.mp3` | Cristo | 1:18 | Y tengo las llaves del infierno y de la muerte. |
-| 22 | `voz-n16.mp3` | Narrador | Cierre (opcional) | ¿Qué te dice que Jesús camine en medio de su iglesia? |
+| 22 | `voz-c07.mp3` | Cristo | 1:19 | Escribe las cosas que has visto, y las que son, y las que han de ser después de éstas: |
+| 23 | `voz-c08.mp3` | Cristo | 1:20 | El misterio de las siete estrellas que has visto en mi diestra, y los siete candeleros de oro. |
+| 24 | `voz-c09.mp3` | Cristo | 1:20 | Las siete estrellas son los ángeles de las siete iglesias; |
+| 25 | `voz-c10.mp3` | Cristo | 1:20 | y los siete candeleros que has visto, son las siete iglesias. |
+| 26 | `voz-n16.mp3` | Narrador | Cierre (opcional) | ¿Qué te dice que Jesús camine en medio de su iglesia? |
 
 ## Dónde subirlos
 

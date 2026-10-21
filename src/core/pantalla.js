@@ -39,7 +39,7 @@ export function reiniciarCalidez() {
 }
 
 export function mostrarPaso(n) {
-  paso.textContent = `${n} / 7`;
+  paso.textContent = `${n} / 8`;
 }
 
 document.getElementById('grabado').src = `${import.meta.env.BASE_URL}assets/textures/durero-siete-candeleros.webp`;
