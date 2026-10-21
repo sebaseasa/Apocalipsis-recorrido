@@ -50,7 +50,7 @@ export function mostrarPasoTexto(texto) {
 // 'siguiente', 'repetir' o 'menu'.
 const reflexion = document.getElementById('reflexion');
 export function pedirReflexion(iglesia, haySiguiente) {
-  document.getElementById('reflexion-iglesia').textContent = `Iglesia en ${iglesia.nombre} · Apocalipsis ${iglesia.ref}`;
+  document.getElementById('reflexion-iglesia').textContent = `La iglesia en ${iglesia.nombre} · Apocalipsis ${iglesia.ref.replace('-', '\u2011')}`;
   document.getElementById('reflexion-pregunta').textContent = iglesia.pregunta;
   const siguiente = document.getElementById('reflexion-siguiente');
   siguiente.hidden = !haySiguiente;

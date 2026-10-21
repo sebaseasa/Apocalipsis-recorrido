@@ -17,13 +17,13 @@ const VISTA_ASIA = [38.25, 27.9, 0.055];
 // Datos de cada iglesia: versículos, pregunta para reflexionar y lo que se ve en cada versículo.
 // "vela" es el candelero de esa iglesia (Efeso a la izquierda, Laodicea a la derecha).
 export const IGLESIAS = [
-  { nombre: 'Efeso', cap: 2, desde: 1, hasta: 7, pregunta: '¿Cómo está hoy mi primer amor por Jesús? ¿Qué "primeras obras" necesito volver a hacer?' },
-  { nombre: 'Smirna', cap: 2, desde: 8, hasta: 11, pregunta: '¿Qué me ayuda a seguir fiel cuando paso por pruebas?' },
-  { nombre: 'Pérgamo', cap: 2, desde: 12, hasta: 17, pregunta: '¿En qué áreas de mi vida me cuesta no "negar su nombre"?' },
-  { nombre: 'Tiatira', cap: 2, desde: 18, hasta: 29, pregunta: '¿Hay algo que Jesús, que ve el corazón, me está pidiendo cambiar?' },
-  { nombre: 'Sardis', cap: 3, desde: 1, hasta: 6, pregunta: '¿Mi fe está viva por dentro, o solo "tengo nombre que vivo"?' },
-  { nombre: 'Filadelfia', cap: 3, desde: 7, hasta: 13, pregunta: '¿Qué "puerta abierta" ha puesto Dios delante de mí o de nuestra iglesia?' },
-  { nombre: 'Laodicea', cap: 3, desde: 14, hasta: 22, pregunta: 'Jesús está a la puerta y llama: ¿qué significa para mí abrirle hoy?' },
+  { nombre: 'Efeso', cap: 2, desde: 1, hasta: 7, pregunta: '¿Amo hoy a Jesús como al principio? ¿Qué hacía antes por Él que necesito volver a hacer?' },
+  { nombre: 'Smirna', cap: 2, desde: 8, hasta: 11, pregunta: 'Cuando paso por pruebas, ¿qué me ayuda a seguir siendo fiel a Jesús?' },
+  { nombre: 'Pérgamo', cap: 2, desde: 12, hasta: 17, pregunta: '¿En qué momentos me cuesta mostrar que soy de Jesús?' },
+  { nombre: 'Tiatira', cap: 2, desde: 18, hasta: 29, pregunta: 'Jesús conoce mi corazón. ¿Hay algo que me está pidiendo cambiar?' },
+  { nombre: 'Sardis', cap: 3, desde: 1, hasta: 6, pregunta: '¿Mi fe está viva de verdad, o solo lo parece por fuera?' },
+  { nombre: 'Filadelfia', cap: 3, desde: 7, hasta: 13, pregunta: '¿Qué puerta ha abierto Dios para mí o para nuestra iglesia?' },
+  { nombre: 'Laodicea', cap: 3, desde: 14, hasta: 22, pregunta: 'Jesús está a la puerta y llama. ¿Qué significa para mí abrirle hoy?' },
 ].map((ig, k) => ({ ...ig, vela: 6 - k, ref: `${ig.cap}:${ig.desde}-${ig.hasta}` }));
 
 // "El que tiene oído, oiga lo que el Espíritu dice á las iglesias" (la carta es para todas).
@@ -85,6 +85,7 @@ export async function cartas(mundo, cam, indices) {
   g.temblor = 0;
   g.foco.set(0, 1.3, -7.5);
   g.pesoFoco = 1;
+  g.deriva = 0;
   fundido('negro', 1, 0);
   audio.silencio(false, 0.5);
   audio.nivel('ambiente', 0.2, 2);
@@ -98,7 +99,7 @@ export async function cartas(mundo, cam, indices) {
     tierra.resaltar(null);
     tierra.volar(VISTA_ASIA, VISTA_ASIA, 1);
     await fundido('negro', 0, 2);
-    mostrarSubtitulo('Apocalipsis 1:11', '"Escribe en un libro lo que ves, y envíalo á las siete iglesias que están en Asia."');
+    mostrarSubtitulo('Apocalipsis 1:11', '"Escribe en un libro lo que ves, y envíalo á las siete iglesias que están en Asia…"');
     await esperar(7);
   }
 
@@ -268,7 +269,8 @@ export async function cartas(mundo, cam, indices) {
       },
     };
 
-    // 4. Lectura completa de la carta.
+    // 4. Lectura completa de la carta, con la cámara en un movimiento lento.
+    const deriva = animar(4, (p) => (g.deriva = p));
     for (let v = ig.desde; v <= ig.hasta; v++) {
       const ref = `${ig.cap}:${v}`;
       const tareas = [leerVersiculo(ref, 0.5)];
@@ -277,6 +279,8 @@ export async function cartas(mundo, cam, indices) {
       await juntos(...tareas);
     }
     await caminar;
+    await deriva;
+    await animar(2, (p) => (g.deriva = 1 - p));
 
     // 5. Para reflexionar.
     await esperar(1);

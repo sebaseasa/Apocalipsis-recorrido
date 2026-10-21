@@ -16,6 +16,8 @@ export function crearCamaraGuiada() {
     // Punto al que mira la cámara. Con pesoFoco = 1 manda sobre giro e inclinación.
     foco: new THREE.Vector3(),
     pesoFoco: 0,
+    // Deriva: un movimiento lento y suave alrededor de la posición (0 = quieta).
+    deriva: 0,
   };
   const hacia = new THREE.Vector3();
 
@@ -37,6 +39,11 @@ export function crearCamaraGuiada() {
       desvio.inclinacion -= desvio.inclinacion * k;
     }
     camara.position.copy(guia.posicion);
+    if (guia.deriva > 0) {
+      camara.position.x += Math.sin(t * 0.11) * 0.55 * guia.deriva;
+      camara.position.y += Math.sin(t * 0.17) * 0.06 * guia.deriva;
+      camara.position.z += Math.sin(t * 0.08 + 1) * 0.6 * guia.deriva;
+    }
     let giro = guia.giro;
     let inclinacion = guia.inclinacion;
     if (guia.pesoFoco > 0) {

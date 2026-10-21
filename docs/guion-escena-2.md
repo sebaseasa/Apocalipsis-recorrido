@@ -45,7 +45,7 @@
 | 2:6 | 💡 La llama se mantiene. |
 | 2:7 | 📖 "El árbol de la vida… en medio del paraíso de Dios": aparece un árbol luminoso al fondo, en medio de una luz dorada. |
 
-**Para reflexionar:** ¿Cómo está hoy mi primer amor por Jesús? ¿Qué "primeras obras" necesito volver a hacer?
+**Para reflexionar:** ¿Amo hoy a Jesús como al principio? ¿Qué hacía antes por Él que necesito volver a hacer?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -74,7 +74,7 @@
 | 2:10 | 📖 "Sé fiel hasta la muerte, y yo te daré la corona de la vida": aparece sobre el candelero una corona de luz dorada. |
 | 2:11 | 💡 La corona permanece. |
 
-**Para reflexionar:** ¿Qué me ayuda a seguir fiel cuando paso por pruebas?
+**Para reflexionar:** Cuando paso por pruebas, ¿qué me ayuda a seguir siendo fiel a Jesús?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -101,7 +101,7 @@
 | 2:16 | 💡 "Pelearé contra ellos con la espada de mi boca": la espada brilla con más fuerza. |
 | 2:17 | 📖 "Maná escondido… una piedrecita blanca, y en la piedrecita un nombre nuevo escrito, el cual ninguno conoce": aparece una piedrecita blanca luminosa con un nombre que no se alcanza a leer. |
 
-**Para reflexionar:** ¿En qué áreas de mi vida me cuesta no "negar su nombre"?
+**Para reflexionar:** ¿En qué momentos me cuesta mostrar que soy de Jesús?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -132,7 +132,7 @@
 | 2:28 | 📖 "Le daré la estrella de la mañana": en lo alto aparece una estrella brillante, como el lucero del amanecer. |
 | 2:29 | 💡 La estrella permanece. |
 
-**Para reflexionar:** ¿Hay algo que Jesús, que ve el corazón, me está pidiendo cambiar?
+**Para reflexionar:** Jesús conoce mi corazón. ¿Hay algo que me está pidiendo cambiar?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -166,7 +166,7 @@
 | 3:4-5 | 📖 "No borraré su nombre del libro de la vida": aparece un libro abierto y luminoso. (Las vestiduras blancas quedan solo en el texto.) |
 | 3:6 | 💡 La llama se reaviva un poco. |
 
-**Para reflexionar:** ¿Mi fe está viva por dentro, o solo "tengo nombre que vivo"?
+**Para reflexionar:** ¿Mi fe está viva de verdad, o solo lo parece por fuera?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -196,7 +196,7 @@
 | 3:12 | 📖 "Lo haré columna en el templo de mi Dios… la nueva Jerusalem, la cual desciende del cielo": aparece una columna de luz; se sugiere una ciudad luminosa a lo lejos, sin detallarla (se describe hasta el capítulo 21). |
 | 3:13 | 💡 La puerta sigue abierta. |
 
-**Para reflexionar:** ¿Qué "puerta abierta" ha puesto Dios delante de mí o de nuestra célula?
+**Para reflexionar:** ¿Qué puerta ha abierto Dios para mí o para nuestra iglesia?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -229,7 +229,7 @@
 | 3:21 | Solo texto (el trono se describe hasta el capítulo 4). |
 | 3:22 | 💡 Cierre de la carta. |
 
-**Para reflexionar:** Jesús está a la puerta y llama: ¿qué significa para mí abrirle hoy?
+**Para reflexionar:** Jesús está a la puerta y llama. ¿Qué significa para mí abrirle hoy?
 
 <details><summary>Texto completo (RV 1909)</summary>
 

@@ -42,6 +42,7 @@ export async function recorrido(mundo, cam) {
   g.temblor = 0;
   g.ladeo = 0;
   g.pesoFoco = 0;
+  g.deriva = 0;
   mundo.reiniciar();
   reiniciarCalidez();
   fundido('negro', 1, 0);
@@ -62,7 +63,7 @@ export async function recorrido(mundo, cam) {
   await esperar(10);
   mostrarSubtitulo('Las siete iglesias de Asia (1:11)', 'En la costa de Asia estaban las siete iglesias a las que Juan escribió.');
   await esperar(10);
-  mostrarSubtitulo('La isla de Patmos', 'Una isla pequeña y rocosa, a unos 100 km de Éfeso. Allí estaba Juan, desterrado.');
+  mostrarSubtitulo('La isla de Patmos', 'Una isla pequeña y rocosa, a unos 100 km de Efeso. Allí estaba Juan, desterrado.');
   await bajar;
   await esperar(3);
   await fundido('negro', 1, 2.5);
