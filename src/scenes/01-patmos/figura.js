@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { crearResplandor, texturaResplandor, texturaRayos } from './resplandor.js';
 import { modelo } from '../../core/cargador.js';
+import { crearUniformesVida, inyectarVida } from '../../core/vida.js';
 
 // El Hijo del hombre (Apocalipsis 1:13-18), con formas simples.
 // Sin rostro detallado: la cara es solo luz. Cada rasgo que describe Juan
@@ -39,8 +40,12 @@ export function crearFigura(posicion) {
   const tela = new THREE.MeshStandardMaterial({
     color: 0xffffff, roughness: 0.55, metalness: 0, emissive: 0xfff3df, emissiveIntensity: 0.07, transparent: true, opacity: 0,
   });
+  // Vida: respira, la túnica se mueve, la cabeza se inclina y el brazo derecho se extiende.
+  const vida = crearUniformesVida();
+  const HOMBRO = new THREE.Vector3(-0.24, 1.5, -0.02);
   tela.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, extra);
+    inyectarVida(sh, vida, { alto: 1.94, cuello: 1.6, pivote: [-0.02, 1.6, -0.02], hombro: HOMBRO.toArray() });
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vLocal;')
       .replace('#include <begin_vertex>', '#include <begin_vertex>\nvLocal = position;');
@@ -255,12 +260,26 @@ export function crearFigura(posicion) {
     espada.scale.set(1, 1, Math.max(e.espada, 0.001));
     filo.opacity = Math.min(1, e.espada * 1.5);
 
-    // "Puso su diestra sobre mí": se inclina hacia Juan, tendido a sus pies.
-    cuerpo.rotation.x = mezclar(0, 0.16, e.mano);
+    // "Puso su diestra sobre mí": extiende el brazo derecho y se inclina un poco hacia Juan.
+    cuerpo.rotation.x = mezclar(0, 0.06, e.mano);
+    vida.uTiempo.value = t;
+    vida.uBrazo.value = e.mano * 0.95;
+    vida.uCabezaGiro.value = Math.sin(t * 0.27) * 0.06;
+    vida.uCabezaInclina.value += (inclinarCabeza - vida.uCabezaInclina.value) * 0.03;
+    // Las siete estrellas acompañan a la mano cuando el brazo se extiende.
+    mano.copy(MANO).sub(HOMBRO);
+    mano.applyAxisAngle(EJE_X, -vida.uBrazo.value).add(HOMBRO);
+    estrellas.position.set(mano.x, mano.y + 0.16, mano.z + 0.02);
     llaves.visible = e.llaves > 0;
     llaves.scale.setScalar(Math.max(e.llaves, 0.001));
     brilloLlaves.material.opacity = e.llaves * 0.7;
   }
+
+  // Hacia dónde mira la cabeza (se inclina cuando Juan está abajo, en el suelo).
+  let inclinarCabeza = 0;
+  const MANO = new THREE.Vector3(-0.42, 1.13, 0.22);
+  const EJE_X = new THREE.Vector3(1, 0, 0);
+  const mano = new THREE.Vector3();
 
   // Jesús vuelve el rostro hacia Juan cuando este se mueve.
   // (Mientras las estrellas vuelan a los candeleros se queda quieto, para que lleguen a su lugar.)
@@ -269,6 +288,9 @@ export function crearFigura(posicion) {
     const dx = pos.x - grupo.position.x;
     const dz = pos.z - grupo.position.z;
     if (dx * dx + dz * dz < 0.25) return;
+    // Inclina la cabeza para mirar a Juan si está más abajo (de rodillas o tendido).
+    const d = Math.hypot(dx, dz);
+    inclinarCabeza = THREE.MathUtils.clamp(Math.atan2(1.75 - pos.y, d) - Math.atan2(0.15, d), 0, 0.5);
     // Su frente mira a +z local: con rotation.y = atan2(dx, dz) queda de cara al punto.
     let objetivo = Math.atan2(dx, dz);
     let actual = grupo.rotation.y;

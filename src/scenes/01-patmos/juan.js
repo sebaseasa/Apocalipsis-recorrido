@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { modelo } from '../../core/cargador.js';
+import { crearUniformesVida, inyectarVida } from '../../core/vida.js';
 
 // Juan, visto desde fuera (modo "Desde fuera"). Escultura de un anciano con túnica y libro
 // (Sketchfab, ver CREDITS.md), con colores de tela, cabello canoso y piel.
@@ -15,8 +16,11 @@ export function crearJuan() {
   grupo.add(cuerpo);
 
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85, metalness: 0 });
+  // Vida: respira, la túnica se mueve y se mece al caminar.
+  const vida = crearUniformesVida();
   material.onBeforeCompile = (sh) => {
     sh.uniforms.uAlto = { value: ALTO };
+    inyectarVida(sh, vida, { alto: ALTO, cuello: 1.5, pivote: [0, 1.5, 0] });
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vLocal;')
       .replace('#include <begin_vertex>', '#include <begin_vertex>\nvLocal = position;');
@@ -60,6 +64,13 @@ export function crearJuan() {
 
   // Coloca a Juan donde están sus ojos (pos), mirando hacia "giro" (el de la cámara).
   // "caida" (0 de pie, 1 tendido en el suelo) para 1:17: "caí como muerto á sus pies".
+  // t: tiempo; andar: 0 quieto a 1 caminando.
+  function animar(t, andar) {
+    vida.uTiempo.value = t;
+    vida.uAndar.value += (andar - vida.uAndar.value) * 0.1;
+    vida.uCabezaGiro.value = Math.sin(t * 0.31) * 0.05;
+  }
+
   function colocar(ojo, giro, caida) {
     grupo.position.set(ojo.x, 0, ojo.z);
     // La cámara con giro 0 mira a -z; el frente de Juan es +z: media vuelta.
@@ -69,5 +80,5 @@ export function crearJuan() {
     cuerpo.position.z = -caida * 0.8;
   }
 
-  return { grupo, colocar };
+  return { grupo, colocar, animar };
 }

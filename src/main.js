@@ -240,6 +240,7 @@ document.addEventListener('visibilitychange', () => {
 // ?velocidad=4 acelera el recorrido (solo para pruebas).
 let velocidad = Number(new URLSearchParams(location.search).get('velocidad')) || 1;
 if (velocidad !== 1) window.ajustarVelocidad = (v) => (velocidad = v);
+const ojoAnterior = new THREE.Vector3();
 const reloj = new THREE.Clock();
 let t = 0;
 renderer.setAnimationLoop(() => {
@@ -259,8 +260,12 @@ renderer.setAnimationLoop(() => {
   juan.grupo.visible = mundo.vista === 'cueva' && cam.juanVisible();
   if (juan.grupo.visible) {
     const caida = THREE.MathUtils.clamp((1.6 - cam.ojo.y) / 1.3, 0, 1);
+    // Se mece al caminar: según cuánto se movió desde el cuadro anterior.
+    const rapidez = ojoAnterior.distanceTo(cam.ojo) / Math.max(dt, 0.001);
+    juan.animar(t, THREE.MathUtils.clamp(rapidez / 1.2, 0, 1) * (1 - caida));
     juan.colocar(cam.ojo, cam.vista.giro, caida);
   }
+  ojoAnterior.copy(cam.ojo);
   const enTierra = mundo.vista === 'tierra';
   const escena = enTierra ? mundo.tierra.escena : mundo.escena;
   const camara = enTierra ? mundo.tierra.camara : cam.camara;
