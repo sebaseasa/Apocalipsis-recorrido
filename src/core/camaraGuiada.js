@@ -12,7 +12,12 @@ export function crearCamaraGuiada() {
     giro: 0, // radianes; 0 mira hacia -z
     inclinacion: 0, // radianes; positivo mira hacia arriba
     temblor: 0,
+    ladeo: 0, // radianes; inclina la cabeza hacia un lado (al caer)
+    // Punto al que mira la cámara. Con pesoFoco = 1 manda sobre giro e inclinación.
+    foco: new THREE.Vector3(),
+    pesoFoco: 0,
   };
+  const hacia = new THREE.Vector3();
 
   const desvio = { giro: 0, inclinacion: 0, arrastrando: false };
   let sensibilidad = 0.004;
@@ -32,13 +37,25 @@ export function crearCamaraGuiada() {
       desvio.inclinacion -= desvio.inclinacion * k;
     }
     camara.position.copy(guia.posicion);
+    let giro = guia.giro;
+    let inclinacion = guia.inclinacion;
+    if (guia.pesoFoco > 0) {
+      hacia.subVectors(guia.foco, guia.posicion);
+      let giroFoco = Math.atan2(-hacia.x, -hacia.z);
+      // Tomar el camino corto, sin dar la vuelta completa.
+      while (giroFoco - giro > Math.PI) giroFoco -= Math.PI * 2;
+      while (giroFoco - giro < -Math.PI) giroFoco += Math.PI * 2;
+      const incFoco = Math.atan2(hacia.y, Math.hypot(hacia.x, hacia.z));
+      giro = THREE.MathUtils.lerp(giro, giroFoco, guia.pesoFoco);
+      inclinacion = THREE.MathUtils.lerp(inclinacion, incFoco, guia.pesoFoco);
+    }
     let tx = 0;
     let ty = 0;
     if (guia.temblor > 0) {
       tx = (Math.sin(t * 37) + Math.sin(t * 23)) * 0.004 * guia.temblor;
       ty = (Math.sin(t * 41) + Math.sin(t * 29)) * 0.004 * guia.temblor;
     }
-    camara.rotation.set(guia.inclinacion + desvio.inclinacion + ty, guia.giro + desvio.giro + tx, 0);
+    camara.rotation.set(inclinacion + desvio.inclinacion + ty, giro + desvio.giro + tx, guia.ladeo);
   }
 
   // En pantallas angostas (Fold doblado) se abre el campo de visión

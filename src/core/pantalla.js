@@ -21,6 +21,23 @@ export function fundido(color, destino, segundos) {
   });
 }
 
+// Calidez: luz suave que baja desde arriba, como una mano que toca (1:17).
+const calidez = document.getElementById('calidez');
+let nivelCalidez = 0;
+
+export function tocarCalidez(destino, segundos) {
+  const desde = nivelCalidez;
+  return animar(segundos, (p) => {
+    nivelCalidez = desde + (destino - desde) * p;
+    calidez.style.opacity = nivelCalidez;
+  });
+}
+
+export function reiniciarCalidez() {
+  nivelCalidez = 0;
+  calidez.style.opacity = 0;
+}
+
 export function mostrarPaso(n) {
   paso.textContent = `${n} / 7`;
 }

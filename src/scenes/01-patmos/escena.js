@@ -32,7 +32,7 @@ export function crearEscena() {
 
   function reiniciar() {
     candeleros.apagarTodo();
-    Object.assign(figura.estado, { presencia: 0, sol: 0, estrellas: 0 });
+    figura.reiniciar();
     luzBoca.intensity = 35;
   }
 

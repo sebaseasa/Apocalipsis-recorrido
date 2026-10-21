@@ -96,7 +96,8 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ?velocidad=4 acelera el recorrido (solo para pruebas).
-const velocidad = Number(new URLSearchParams(location.search).get('velocidad')) || 1;
+let velocidad = Number(new URLSearchParams(location.search).get('velocidad')) || 1;
+if (velocidad !== 1) window.ajustarVelocidad = (v) => (velocidad = v);
 const reloj = new THREE.Clock();
 let t = 0;
 renderer.setAnimationLoop(() => {
