@@ -41,6 +41,9 @@ export function crearCamaraGuiada() {
   const adelante = new THREE.Vector3();
   const derecha = new THREE.Vector3();
   let sensibilidad = 0.004;
+  // Hasta dónde se puede caminar (por defecto, dentro de la cueva).
+  const CUEVA = { x0: -3.3, x1: 3.3, z0: -18.5, z1: 4.5 };
+  const lim = { ...CUEVA };
 
   function arrastrar(dx, dy, activo) {
     desvio.arrastrando = activo;
@@ -100,9 +103,9 @@ export function crearCamaraGuiada() {
       d.multiplyScalar(1 - Math.min(1, dt * 0.8)); // al apagarlo, vuelve despacio al camino
     }
     camara.position.copy(guia.posicion).add(d);
-    // Dentro de la cueva (no atravesar las paredes ni salir al precipicio).
-    camara.position.x = THREE.MathUtils.clamp(camara.position.x, -3.3, 3.3);
-    camara.position.z = THREE.MathUtils.clamp(camara.position.z, -18.5, 4.5);
+    // Dentro del lugar (no atravesar las paredes de la cueva ni salir al precipicio).
+    camara.position.x = THREE.MathUtils.clamp(camara.position.x, lim.x0, lim.x1);
+    camara.position.z = THREE.MathUtils.clamp(camara.position.z, lim.z0, lim.z1);
     d.subVectors(camara.position, guia.posicion).setY(0);
     if (guia.deriva > 0) {
       camara.position.x += Math.sin(t * 0.11) * 0.55 * guia.deriva;
@@ -185,10 +188,15 @@ export function crearCamaraGuiada() {
     }
   }
 
-  // Dentro de la cueva (sin atravesar las paredes).
+  // Dentro del lugar (sin atravesar las paredes).
   function limitar(v) {
-    v.x = THREE.MathUtils.clamp(v.x, -3.4, 3.4);
-    v.z = THREE.MathUtils.clamp(v.z, -18.8, 4.8);
+    v.x = THREE.MathUtils.clamp(v.x, lim.x0 - 0.1, lim.x1 + 0.1);
+    v.z = THREE.MathUtils.clamp(v.z, lim.z0 - 0.3, lim.z1 + 0.3);
+  }
+
+  // Cambia el lugar donde se puede caminar (null = la cueva).
+  function fijarLimites(nuevos) {
+    Object.assign(lim, nuevos ?? CUEVA);
   }
 
   // En pantallas angostas (Fold doblado) se abre el campo de visión
@@ -246,6 +254,6 @@ export function crearCamaraGuiada() {
 
   return {
     camara, guia, arrastrar, actualizar, ajustarAspecto, palanca, caminar, fijarModo, fijarObjetivo,
-    juanVisible, modo, ojo, vista,
+    fijarLimites, juanVisible, modo, ojo, vista,
   };
 }

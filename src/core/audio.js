@@ -353,6 +353,73 @@ export function llamar() {
   });
 }
 
+// Trueno lejano que retumba (4:5 "relámpagos y truenos y voces").
+export function trueno() {
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  const s = ctx.createBufferSource();
+  s.buffer = ruidoMarron;
+  const f = ctx.createBiquadFilter();
+  f.type = 'lowpass';
+  f.frequency.setValueAtTime(900, t);
+  f.frequency.exponentialRampToValueAtTime(120, t + 3);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.9, t + 0.05);
+  g.gain.exponentialRampToValueAtTime(0.35, t + 0.6);
+  g.gain.linearRampToValueAtTime(0.5, t + 1.1);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 4.5);
+  vaiven(g.gain, 5 + Math.random() * 4, 0.12);
+  s.connect(f).connect(g).connect(buses.efectos);
+  g.connect(reverb);
+  s.start(t, Math.random() * 3);
+  s.stop(t + 4.6);
+}
+
+// "Santo, santo, santo" (4:8): tres oleadas de un coro suave, sin palabras.
+export function santo() {
+  if (!ctx) return;
+  const t0 = ctx.currentTime;
+  // Dos filtros como de vocal "a" para que suene a voces.
+  const salida = ctx.createGain();
+  salida.gain.value = 1;
+  salida.connect(buses.efectos);
+  salida.connect(reverb);
+  const formantes = [[800, 0.5], [1150, 0.3], [2900, 0.08]].map(([fr, gan]) => {
+    const f = ctx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.value = fr;
+    f.Q.value = 6;
+    const g = ctx.createGain();
+    g.gain.value = gan;
+    f.connect(g).connect(salida);
+    return f;
+  });
+  // Acordes: re mayor, sol mayor, re mayor.
+  const acordes = [[146.83, 220, 293.66, 369.99], [146.83, 246.94, 293.66, 392], [146.83, 220, 293.66, 440]];
+  acordes.forEach((notas, k) => {
+    const ti = t0 + k * 2.4;
+    for (const fr of notas) {
+      for (const desafine of [-7, 0, 7]) {
+        const o = ctx.createOscillator();
+        o.type = 'sawtooth';
+        o.frequency.value = fr;
+        o.detune.value = desafine;
+        vaiven(o.detune, 4.5 + Math.random(), 6);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0, ti);
+        g.gain.linearRampToValueAtTime(0.018, ti + 0.7);
+        g.gain.setValueAtTime(0.018, ti + 1.9);
+        g.gain.linearRampToValueAtTime(0, ti + 3.2);
+        o.connect(g);
+        formantes.forEach((f) => g.connect(f));
+        o.start(ti);
+        o.stop(ti + 3.3);
+      }
+    }
+  });
+}
+
 // Pausa todo el sonido (y lo reanuda) sin perder el punto donde iba.
 export function pausarAudio(valor) {
   if (!ctx) return;

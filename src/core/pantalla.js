@@ -72,9 +72,23 @@ export function ocultarReflexion() {
   reflexion.hidden = true;
 }
 
-document.getElementById('grabado').src = `${import.meta.env.BASE_URL}assets/textures/durero-siete-candeleros.webp`;
+// Cierre con un grabado de Durero y una pregunta (por defecto, el de Apocalipsis 1).
+const CIERRE_1 = {
+  imagen: 'durero-siete-candeleros.webp',
+  pie: 'Alberto Durero, <em>La visión de los siete candeleros</em>, 1498',
+  alt: 'Alberto Durero, La visión de los siete candeleros (1498)',
+  pregunta: '¿Qué te dice que Jesús camine en medio de su iglesia?',
+};
 
-export function mostrarCierre() {
+// Se cargan de antemano para que aparezcan al instante.
+for (const f of ['durero-siete-candeleros.webp', 'durero-trono.webp']) new Image().src = `${import.meta.env.BASE_URL}assets/textures/${f}`;
+
+export function mostrarCierre(datos = CIERRE_1) {
+  const img = document.getElementById('grabado');
+  img.src = `${import.meta.env.BASE_URL}assets/textures/${datos.imagen}`;
+  img.alt = datos.alt;
+  document.getElementById('grabado-pie').innerHTML = datos.pie;
+  document.getElementById('cierre-pregunta').textContent = datos.pregunta;
   cierre.hidden = false;
   requestAnimationFrame(() => cierre.classList.add('visible'));
 }

@@ -13,7 +13,7 @@ const PERFIL = [
 ];
 
 // Llama: un plano que siempre mira a la cámara, dibujado con ruido que ondula.
-const llamaVertex = /* glsl */ `
+export const llamaVertex = /* glsl */ `
   varying vec2 vUv;
   void main() {
     vUv = uv;
@@ -24,7 +24,7 @@ const llamaVertex = /* glsl */ `
     gl_Position = projectionMatrix * centro;
   }
 `;
-const llamaFragment = /* glsl */ `
+export const llamaFragment = /* glsl */ `
   uniform float uTiempo;
   uniform float uFase;
   uniform float uNivel;

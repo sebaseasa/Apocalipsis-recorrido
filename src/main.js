@@ -17,6 +17,8 @@ import { recorrido } from './scenes/01-patmos/guion.js';
 import { cartas, IGLESIAS } from './scenes/02-iglesias/guion.js';
 import { crearSimbolos } from './scenes/02-iglesias/simbolos.js';
 import { crearJuan } from './scenes/01-patmos/juan.js';
+import { crearCielo } from './scenes/04-trono/cielo.js';
+import { trono } from './scenes/04-trono/guion.js';
 
 const contenedor = document.getElementById('app');
 const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
@@ -31,6 +33,8 @@ mundo.tierra = crearTierra();
 mundo.vista = 'cueva';
 // Símbolos de las cartas (escena 2), en el mismo mundo de la cueva.
 mundo.simbolos = crearSimbolos(mundo.escena);
+// El cielo de Apocalipsis 4 (otro mundo; se dibuja cuando mundo.vista es 'cielo').
+mundo.cielo = crearCielo();
 // Juan, visible solo al ver desde fuera.
 const juan = crearJuan();
 mundo.escena.add(juan.grupo);
@@ -58,6 +62,7 @@ function alCambiarTamano() {
   cam.ajustarAspecto(w / h);
   mundo.tierra.ajustarAspecto(w / h);
   mundo.atmosfera.ajustarPantalla(h * pr);
+  mundo.cielo.ajustarPantalla(h * pr, cam.camara.fov);
 }
 
 const detector = crearDetector(({ pixeles: p, brillo: b }) => {
@@ -102,12 +107,14 @@ IGLESIAS.forEach((ig, k) => {
 
 alProgreso((p) => (carga.textContent = `Cargando… ${Math.round(p * 100)}%`));
 const base = import.meta.env.BASE_URL;
-Promise.all([cargarTexto(`${base}text/apocalipsis-1.json`), cargarTexto(`${base}text/apocalipsis-2-3.json`), todoCargado()])
+Promise.all([cargarTexto(`${base}text/apocalipsis-1.json`), cargarTexto(`${base}text/apocalipsis-2-3.json`), cargarTexto(`${base}text/apocalipsis-4.json`), todoCargado()])
   .then(() => {
     mundo.prepararReflejos(renderer);
+    mundo.cielo.prepararReflejos(renderer);
     // Preparar los sombreadores antes de entrar, para que no haya tirones al empezar.
     renderer.compile(mundo.escena, cam.camara);
     renderer.compile(mundo.tierra.escena, mundo.tierra.camara);
+    renderer.compile(mundo.cielo.escena, cam.camara);
     carga.hidden = true;
     menu.hidden = false;
   })
@@ -181,6 +188,8 @@ function limpiar() {
   mundo.tierra.mostrar(false);
   for (let i = 0; i < 7; i++) mundo.mostrarIglesia(i, false);
   mundo.simbolos.reiniciar();
+  mundo.cielo.reiniciar();
+  cam.fijarLimites(null);
   mundo.vista = 'cueva';
 }
 
@@ -202,6 +211,8 @@ async function empezar(escena, iglesia) {
   mostrarBarra();
   if (escena === '1') {
     await recorrido(mundo, cam);
+  } else if (escena === '4') {
+    await trono(mundo, cam);
   } else {
     const indices = iglesia === 'todas' ? [0, 1, 2, 3, 4, 5, 6] : [Number(iglesia)];
     const fin = await cartas(mundo, cam, indices);
@@ -253,11 +264,16 @@ renderer.setAnimationLoop(() => {
   mundo.simbolos.actualizar(t);
   // Jesús vuelve el rostro hacia Juan (sobre todo al caminar).
   if (mundo.vista === 'cueva') mundo.figura.mirarHacia(cam.ojo, dt);
-  // El testigo encuadra a Juan junto con Jesús cuando Él está presente.
-  cam.fijarObjetivo(mundo.figura.estado.presencia > 0.3 ? mundo.figura.punto('pecho') : null);
+  const enCielo = mundo.vista === 'cielo';
+  // El testigo encuadra a Juan junto con Jesús cuando Él está presente (o con el trono, en el cielo).
+  if (enCielo) cam.fijarObjetivo(mundo.cielo.estado.trono > 0.5 ? mundo.cielo.punto('trono') : null);
+  else cam.fijarObjetivo(mundo.figura.estado.presencia > 0.3 ? mundo.figura.punto('pecho') : null);
   cam.actualizar(t, dt);
   // Desde fuera: Juan ocupa el lugar de los ojos; si los ojos bajan al suelo, cae (1:17).
-  juan.grupo.visible = mundo.vista === 'cueva' && cam.juanVisible();
+  // Juan va con el mundo que se está viendo (la cueva o el cielo).
+  const mundoJuan = enCielo ? mundo.cielo.escena : mundo.escena;
+  if (juan.grupo.parent !== mundoJuan) mundoJuan.add(juan.grupo);
+  juan.grupo.visible = mundo.vista !== 'tierra' && cam.juanVisible();
   if (juan.grupo.visible) {
     const caida = THREE.MathUtils.clamp((1.6 - cam.ojo.y) / 1.3, 0, 1);
     // Se mece al caminar: según cuánto se movió desde el cuadro anterior.
@@ -267,13 +283,14 @@ renderer.setAnimationLoop(() => {
   }
   ojoAnterior.copy(cam.ojo);
   const enTierra = mundo.vista === 'tierra';
-  const escena = enTierra ? mundo.tierra.escena : mundo.escena;
+  const escena = enTierra ? mundo.tierra.escena : enCielo ? mundo.cielo.escena : mundo.escena;
   const camara = enTierra ? mundo.tierra.camara : cam.camara;
+  if (enCielo) mundo.cielo.actualizar(t, dt * velocidad);
   if (enTierra) {
     mundo.tierra.actualizar(t);
     mundo.tierra.actualizarRotulos();
   }
-  if (!enTierra) mundo.actualizarEtiquetas(cam.camara);
+  if (mundo.vista === 'cueva') mundo.actualizarEtiquetas(cam.camara);
   pasoEscena.scene = escena;
   pasoEscena.camera = camara;
   if (usarBrillo) composer.render();
