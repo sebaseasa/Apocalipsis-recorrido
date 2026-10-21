@@ -10,6 +10,7 @@ import { crearDetector } from './core/rendimiento.js';
 import { cargarTexto, ocultarSubtitulo } from './core/subtitulos.js';
 import { ocultarCierre } from './core/pantalla.js';
 import { iniciarAudio } from './core/audio.js';
+import { todoCargado, alProgreso } from './core/cargador.js';
 import { crearEscena } from './scenes/01-patmos/escena.js';
 import { recorrido } from './scenes/01-patmos/guion.js';
 
@@ -42,6 +43,7 @@ function alCambiarTamano() {
   // El brillo se calcula a menor resolución para ahorrar trabajo.
   brillo.resolution.set(w * pr * 0.5, h * pr * 0.5);
   cam.ajustarAspecto(w / h);
+  mundo.atmosfera.ajustarPantalla(h * pr);
 }
 
 const detector = crearDetector(({ pixeles: p, brillo: b }) => {
@@ -60,10 +62,18 @@ crearControles(document.body, {
 // Pantalla de inicio: el audio del celular solo arranca después de un toque.
 const inicio = document.getElementById('inicio');
 const botonEntrar = document.getElementById('entrar');
-cargarTexto(`${import.meta.env.BASE_URL}text/apocalipsis-1.json`).then(() => {
-  botonEntrar.disabled = false;
-  botonEntrar.textContent = 'Entrar';
-});
+alProgreso((p) => (botonEntrar.textContent = `Cargando… ${Math.round(p * 100)}%`));
+Promise.all([cargarTexto(`${import.meta.env.BASE_URL}text/apocalipsis-1.json`), todoCargado()])
+  .then(() => {
+    mundo.prepararReflejos(renderer);
+    // Preparar los sombreadores antes de entrar, para que no haya tirones al empezar.
+    renderer.compile(mundo.escena, cam.camara);
+    botonEntrar.disabled = false;
+    botonEntrar.textContent = 'Entrar';
+  })
+  .catch(() => {
+    botonEntrar.textContent = 'Error al cargar. Recarga la página.';
+  });
 
 let enMarcha = false;
 

@@ -8,6 +8,76 @@ import { crearResplandor, texturaResplandor } from './resplandor.js';
 //   pies de bronce ardiente (1:15), siete estrellas, espada y rostro como el sol (1:16),
 //   la diestra sobre Juan (1:17) y las llaves (1:18).
 
+// Material "de luz": la tela brilla por sí misma, con bordes más luminosos
+// y vetas suaves que suben, como luz que fluye. Valores mayores a 1 para que resplandezca.
+function materialLuz(color, borde) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uColor: { value: new THREE.Color(color) },
+      uBorde: { value: new THREE.Color(borde) },
+      uOpacidad: { value: 0 },
+      uBrillo: { value: 1 },
+      uTiempo: { value: 0 },
+    },
+    transparent: true,
+    side: THREE.DoubleSide,
+    fog: false,
+    vertexShader: /* glsl */ `
+      varying vec3 vN;
+      varying vec3 vV;
+      varying vec3 vP;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalize(normalMatrix * normal);
+        vV = normalize(-mv.xyz);
+        vP = position;
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: /* glsl */ `
+      uniform vec3 uColor;
+      uniform vec3 uBorde;
+      uniform float uOpacidad;
+      uniform float uBrillo;
+      uniform float uTiempo;
+      varying vec3 vN;
+      varying vec3 vV;
+      varying vec3 vP;
+      void main() {
+        vec3 n = normalize(vN);
+        float borde = pow(1.0 - abs(dot(n, normalize(vV))), 2.2);
+        float luz = 0.68 + 0.32 * max(dot(n, normalize(vec3(0.3, 0.8, 0.5))), 0.0);
+        float vetas = 0.97 + 0.03 * sin(vP.y * 9.0 - uTiempo * 0.8);
+        vec3 c = (uColor * luz * vetas + uBorde * borde * 1.6) * uBrillo;
+        gl_FragColor = vec4(c, uOpacidad);
+      }`,
+  });
+}
+
+// Rayos de luz detrás de la figura (dibujados una vez en un lienzo).
+function texturaRayos() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 512;
+  const g = c.getContext('2d');
+  g.translate(256, 256);
+  for (let i = 0; i < 90; i++) {
+    const a = (i / 90) * Math.PI * 2 + Math.random() * 0.05;
+    const largo = 140 + Math.random() * 116;
+    const ancho = 0.008 + Math.random() * 0.02;
+    const grad = g.createLinearGradient(0, 0, Math.cos(a) * largo, Math.sin(a) * largo);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad;
+    g.beginPath();
+    g.moveTo(0, 0);
+    g.arc(0, 0, largo, a - ancho, a + ancho);
+    g.closePath();
+    g.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
 export function crearFigura(posicion) {
   const grupo = new THREE.Group();
   grupo.position.copy(posicion);
@@ -27,13 +97,26 @@ export function crearFigura(posicion) {
   };
 
   // Vestidura larga hasta los pies: blanca, con algo de volumen.
-  const tela = new THREE.MeshStandardMaterial({
-    color: 0xf4efe6, emissive: 0xfff6e8, emissiveIntensity: 0, roughness: 0.85, transparent: true, opacity: 0,
-  });
+  const tela = materialLuz(0xfff3e2, 0xffffff);
+  tela.uniforms.uColor.value.multiplyScalar(1.05);
   const perfil = [
     [0.0, 0.02], [0.5, 0.02], [0.44, 0.4], [0.36, 0.9], [0.3, 1.3], [0.29, 1.55], [0.33, 1.72], [0.24, 1.84], [0.1, 1.9], [0, 1.9],
   ].map(([x, y]) => new THREE.Vector2(x, y));
-  const vestidura = new THREE.Mesh(new THREE.LatheGeometry(perfil, 28), tela);
+  // Perfil suavizado y pliegues verticales que se abren hacia abajo, como tela que cae.
+  const geoVestidura = new THREE.LatheGeometry(new THREE.SplineCurve(perfil).getPoints(48), 64);
+  {
+    const p = geoVestidura.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+      const a = Math.atan2(z, x);
+      const caida = THREE.MathUtils.clamp(1 - y / 1.5, 0, 1);
+      const pliegue = 1 + (0.07 * Math.sin(a * 9 + y * 0.6) + 0.03 * Math.sin(a * 17 - y)) * caida;
+      p.setX(i, x * pliegue);
+      p.setZ(i, z * pliegue);
+    }
+    geoVestidura.computeVertexNormals();
+  }
+  const vestidura = new THREE.Mesh(geoVestidura, tela);
 
   // Cinto de oro a la altura del pecho.
   const oro = new THREE.MeshStandardMaterial({
@@ -51,9 +134,7 @@ export function crearFigura(posicion) {
   cabeza.scale.y = 1.15;
 
   // Cabello blanco como la lana, como la nieve: cae detrás de la cabeza hasta los hombros.
-  const lana = new THREE.MeshStandardMaterial({
-    color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0, roughness: 1, transparent: true, opacity: 0,
-  });
+  const lana = materialLuz(0xffffff, 0xffffff);
   const cabelloArriba = new THREE.Mesh(new THREE.SphereGeometry(0.17, 16, 12), lana);
   cabelloArriba.position.set(0, 2.1, -0.04);
   const cabelloAtras = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.25, 0.42, 16, 1, true), lana);
@@ -93,7 +174,8 @@ export function crearFigura(posicion) {
   luzPies.position.set(0, 0.3, 0.7);
 
   // Brazos con hombro como bisagra. La diestra (a la izquierda de quien mira) tiene las estrellas.
-  const geoBrazo = new THREE.CylinderGeometry(0.075, 0.06, 0.72, 10);
+  // Mangas anchas que caen desde el hombro.
+  const geoBrazo = new THREE.CylinderGeometry(0.07, 0.13, 0.72, 16, 1, true);
   geoBrazo.translate(0, -0.36, 0); // que gire desde el hombro
   const hombroDer = new THREE.Group();
   hombroDer.position.set(-0.3, 1.76, 0);
@@ -152,7 +234,14 @@ export function crearFigura(posicion) {
   aura.scale.set(4, 5.5, 1);
   const halo = crearResplandor(0xffffff, 1);
   halo.position.set(0, 2.06, 0.1);
-  grupo.add(aura, halo);
+  const rayos = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: texturaRayos(), color: 0xfff0d0, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
+    })
+  );
+  rayos.position.set(0, 1.7, -0.3);
+  rayos.scale.setScalar(4.5);
+  grupo.add(rayos, aura, halo);
 
   const luz = new THREE.PointLight(0xfff1dd, 0, 12, 2);
   luz.position.set(0, 1.8, 0.8);
@@ -165,14 +254,16 @@ export function crearFigura(posicion) {
     const p = e.presencia;
     grupo.visible = p > 0;
 
-    tela.opacity = p;
-    tela.emissiveIntensity = 0.35 * p + e.sol * 0.3;
+    tela.uniforms.uOpacidad.value = p;
+    tela.uniforms.uBrillo.value = 0.85 + e.sol * 0.5;
+    tela.uniforms.uTiempo.value = t;
     oro.opacity = p;
     oro.emissiveIntensity = 0.15 * p + e.cinto * 1.2;
     luzRostro.opacity = p;
 
-    lana.opacity = p * (0.5 + e.cabello * 0.5);
-    lana.emissiveIntensity = 0.3 + e.cabello * 1.2;
+    lana.uniforms.uOpacidad.value = p * (0.45 + e.cabello * 0.5);
+    lana.uniforms.uBrillo.value = 0.9 + e.cabello * 0.9;
+    lana.uniforms.uTiempo.value = t;
     brilloCabello.material.opacity = e.cabello * 0.6;
 
     const llama = 0.85 + Math.sin(t * 11) * 0.1 + Math.sin(t * 27) * 0.05;
@@ -192,6 +283,8 @@ export function crearFigura(posicion) {
     aura.material.opacity = (p * 0.3 + e.sol * 0.45) * pulso;
     halo.material.opacity = p * 0.5 + e.sol * 0.5;
     halo.scale.setScalar(0.7 + e.sol * 2.2);
+    rayos.material.opacity = (p * 0.18 + e.sol * 0.35) * pulso;
+    rayos.material.rotation = t * 0.03;
     luz.intensity = p * 2 + e.sol * 2;
 
     estrellas.children.forEach((s, i) => {

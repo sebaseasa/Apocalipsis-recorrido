@@ -42,6 +42,8 @@ export function mostrarPaso(n) {
   paso.textContent = `${n} / 7`;
 }
 
+document.getElementById('grabado').src = `${import.meta.env.BASE_URL}assets/textures/durero-siete-candeleros.webp`;
+
 export function mostrarCierre() {
   cierre.hidden = false;
   requestAnimationFrame(() => cierre.classList.add('visible'));

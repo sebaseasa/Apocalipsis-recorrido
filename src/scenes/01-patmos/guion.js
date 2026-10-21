@@ -90,6 +90,7 @@ export async function recorrido(mundo, cam) {
     g.inclinacion = mezclar(-0.05, 0.02, p);
   });
   luzBoca.intensity = 15; // la entrada queda a la espalda, más tenue
+  mundo.sol.intensity = 6;
   await esperar(1);
   await esperarToque();
 

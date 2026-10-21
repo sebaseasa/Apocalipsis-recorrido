@@ -212,17 +212,17 @@ button:disabled {
 }
 
 .marco {
-  width: min(70vw, 52vh);
-  aspect-ratio: 5 / 7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1em;
-  box-sizing: border-box;
-  border: 3px double #8a6a3a;
-  font-size: clamp(16px, 3.4vmin, 24px);
-  line-height: 1.4;
-  background: rgba(138, 106, 58, 0.08);
+  display: block;
+  height: min(52vh, 92vw * 1.41);
+  max-width: 92vw;
+  object-fit: contain;
+  box-shadow: 0 6px 30px rgba(90, 60, 20, 0.35);
+}
+
+.grabado figcaption {
+  margin-top: 0.5em;
+  font-size: clamp(13px, 2.6vmin, 18px);
+  opacity: 0.75;
 }
 
 .pregunta {
