@@ -26,10 +26,18 @@ export function crearCamaraGuiada() {
   // En este modo la mirada es totalmente libre (giro completo); al apagarlo vuelve al guion.
   const libre = { activo: false, x: 0, y: 0, mezcla: 0, giro: 0, inclinacion: 0, desplazamiento: new THREE.Vector3() };
   const vista = { giro: 0, inclinacion: 0 }; // lo que se ve ahora (para empezar a caminar sin saltos)
-  // Desde fuera (tercera persona): la cámara va detrás de Juan, que ocupa el lugar de los ojos.
-  const tercera = { activo: false, mezcla: 0 };
+  // Tres formas de ver: 'juan' (sus ojos), 'detras' (detrás de Juan) y 'testigo'
+  // (desde otro lugar de la cueva, viendo a Juan y a Jesús juntos).
+  const modoVista = { actual: 'juan', transicion: 1, desdePos: new THREE.Vector3(), desdeQuat: new THREE.Quaternion() };
+  const testigo = { pos: new THREE.Vector3(), giro: 0, inclinacion: 0, listo: false };
+  const objetivo = { punto: new THREE.Vector3(), hay: false }; // a quién mira el testigo además de Juan
   const ojo = new THREE.Vector3(); // dónde están los ojos de Juan
   const atras = new THREE.Vector3();
+  const medio = new THREE.Vector3();
+  const lado = new THREE.Vector3();
+  const destinoPos = new THREE.Vector3();
+  const destinoQuat = new THREE.Quaternion();
+  const euler = new THREE.Euler(0, 0, 0, 'YXZ');
   const adelante = new THREE.Vector3();
   const derecha = new THREE.Vector3();
   let sensibilidad = 0.004;
@@ -66,7 +74,9 @@ export function crearCamaraGuiada() {
       inclinacion = THREE.MathUtils.lerp(inclinacion, incFoco, guia.pesoFoco);
     }
     // Modo caminar: la mirada libre reemplaza a la del guion (con transición suave).
-    libre.mezcla += ((libre.activo ? 1 : 0) - libre.mezcla) * Math.min(1, dt * 2.5);
+    const enTestigo = modoVista.actual === 'testigo';
+    const juanLibre = libre.activo && !enTestigo; // como testigo, quien camina es el testigo
+    libre.mezcla += ((juanLibre ? 1 : 0) - libre.mezcla) * Math.min(1, dt * 2.5);
     let giroFinal = giro + desvio.giro;
     let incFinal = inclinacion + desvio.inclinacion;
     if (libre.mezcla > 0.001) {
@@ -81,7 +91,7 @@ export function crearCamaraGuiada() {
 
     // Caminar: avanzar hacia donde se mira (palanca hacia arriba) o de lado.
     const d = libre.desplazamiento;
-    if (libre.activo) {
+    if (juanLibre) {
       const rumbo = giroFinal; // se avanza hacia donde se mira
       adelante.set(-Math.sin(rumbo), 0, -Math.cos(rumbo));
       derecha.set(Math.cos(rumbo), 0, -Math.sin(rumbo));
@@ -105,28 +115,80 @@ export function crearCamaraGuiada() {
       tx = (Math.sin(t * 37) + Math.sin(t * 23)) * 0.004 * guia.temblor;
       ty = (Math.sin(t * 41) + Math.sin(t * 29)) * 0.004 * guia.temblor;
     }
-    camara.rotation.set(incFinal + ty, giroFinal + tx, guia.ladeo);
-
-    // Desde fuera: detrás de Juan y un poco más alto, mirando hacia donde él mira.
     ojo.copy(camara.position);
-    tercera.mezcla += ((tercera.activo ? 1 : 0) - tercera.mezcla) * Math.min(1, dt * 2);
-    if (tercera.mezcla > 0.001) {
-      const m = tercera.mezcla;
+    euler.set(incFinal + ty, giroFinal + tx, guia.ladeo);
+    destinoQuat.setFromEuler(euler);
+    destinoPos.copy(ojo);
+
+    if (modoVista.actual === 'detras') {
       // Detrás y un poco a la derecha (por encima del hombro), para no tapar lo que mira.
       atras.set(Math.sin(giroFinal), 0, Math.cos(giroFinal)).multiplyScalar(2.3);
       atras.x += Math.cos(giroFinal) * 0.75;
       atras.z += -Math.sin(giroFinal) * 0.75;
       atras.add(ojo);
       atras.y = 1.25 + ojo.y * 0.35;
-      atras.x = THREE.MathUtils.clamp(atras.x, -3.4, 3.4);
-      atras.z = THREE.MathUtils.clamp(atras.z, -18.8, 4.8);
-      camara.position.lerp(atras, m);
-      camara.rotation.set(
-        THREE.MathUtils.lerp(incFinal, incFinal * 0.5 - 0.16, m) + ty,
-        giroFinal + tx,
-        THREE.MathUtils.lerp(guia.ladeo, 0, m)
-      );
+      limitar(atras);
+      destinoPos.copy(atras);
+      euler.set(incFinal * 0.5 - 0.16 + ty, giroFinal + tx, 0);
+      destinoQuat.setFromEuler(euler);
+    } else if (enTestigo) {
+      if (libre.activo) {
+        // El testigo camina y mira libremente; Juan sigue su recorrido.
+        const rumbo = libre.giro;
+        adelante.set(-Math.sin(rumbo), 0, -Math.cos(rumbo));
+        derecha.set(Math.cos(rumbo), 0, -Math.sin(rumbo));
+        testigo.pos.addScaledVector(adelante, -libre.y * 1.4 * dt).addScaledVector(derecha, libre.x * 1.4 * dt);
+        limitar(testigo.pos);
+        testigo.giro = libre.giro;
+        testigo.inclinacion = libre.inclinacion;
+      } else {
+        // Encuadre automático: en diagonal (de lado y algo detrás de Juan), lo bastante lejos
+        // para que en la pantalla quepan Juan y lo que él mira (Jesús, si está).
+        if (objetivo.hay) medio.copy(objetivo.punto);
+        else medio.set(-Math.sin(giroFinal), 0, -Math.cos(giroFinal)).multiplyScalar(3).add(ojo);
+        medio.y = ojo.y;
+        const separacion = Math.max(medio.distanceTo(ojo), 1.5);
+        // Dirección "hacia atrás" (de lo que mira hacia Juan) y su perpendicular.
+        atras.subVectors(ojo, medio).setY(0).normalize();
+        lado.set(atras.z, 0, -atras.x);
+        medio.add(ojo).multiplyScalar(0.5);
+        medio.y = 1.1;
+        // Elegir el costado que queda más dentro de la cueva.
+        if (Math.abs(medio.x + lado.x * 2) > Math.abs(medio.x - lado.x * 2)) lado.multiplyScalar(-1);
+        const anchoVista = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(camara.fov) / 2) * camara.aspect);
+        const distancia = THREE.MathUtils.clamp((separacion / 2 + 1.2) / Math.tan(anchoVista / 2), 3.5, 12);
+        atras.multiplyScalar(0.75).addScaledVector(lado, 0.66).normalize();
+        atras.multiplyScalar(distancia).add(medio);
+        atras.y = 2.2;
+        limitar(atras);
+        if (!testigo.listo) testigo.pos.copy(atras);
+        testigo.pos.lerp(atras, Math.min(1, dt * 1.2));
+        hacia.subVectors(medio, testigo.pos);
+        testigo.giro = Math.atan2(-hacia.x, -hacia.z);
+        testigo.inclinacion = Math.atan2(hacia.y, Math.hypot(hacia.x, hacia.z));
+      }
+      testigo.listo = true;
+      destinoPos.copy(testigo.pos);
+      euler.set(testigo.inclinacion, testigo.giro, 0);
+      destinoQuat.setFromEuler(euler);
     }
+
+    // Transición suave al cambiar de vista.
+    if (modoVista.transicion < 1) {
+      modoVista.transicion = Math.min(1, modoVista.transicion + dt / 1.3);
+      const e = THREE.MathUtils.smootherstep(modoVista.transicion, 0, 1);
+      camara.position.lerpVectors(modoVista.desdePos, destinoPos, e);
+      camara.quaternion.slerpQuaternions(modoVista.desdeQuat, destinoQuat, e);
+    } else {
+      camara.position.copy(destinoPos);
+      camara.quaternion.copy(destinoQuat);
+    }
+  }
+
+  // Dentro de la cueva (sin atravesar las paredes).
+  function limitar(v) {
+    v.x = THREE.MathUtils.clamp(v.x, -3.4, 3.4);
+    v.z = THREE.MathUtils.clamp(v.z, -18.8, 4.8);
   }
 
   // En pantallas angostas (Fold doblado) se abre el campo de visión
@@ -149,19 +211,41 @@ export function crearCamaraGuiada() {
   function caminar(activo) {
     // Se empieza a caminar mirando exactamente lo mismo que se veía.
     if (activo && !libre.activo) {
-      libre.giro = vista.giro;
-      libre.inclinacion = vista.inclinacion;
+      const enTestigo = modoVista.actual === 'testigo';
+      libre.giro = enTestigo ? testigo.giro : vista.giro;
+      libre.inclinacion = enTestigo ? testigo.inclinacion : vista.inclinacion;
     }
     libre.activo = activo;
     if (!activo) palanca(0, 0);
   }
 
-  function verDesdeFuera(activo) {
-    tercera.activo = activo;
+  // Cambiar de vista: 'juan', 'detras' o 'testigo'.
+  function fijarModo(modo) {
+    if (modo === modoVista.actual) return;
+    modoVista.desdePos.copy(camara.position);
+    modoVista.desdeQuat.copy(camara.quaternion);
+    modoVista.transicion = 0;
+    modoVista.actual = modo;
+    if (modo === 'testigo') testigo.listo = false;
+    // Si estaba caminando, se sigue caminando con la nueva vista.
+    if (libre.activo) {
+      libre.activo = false;
+      caminar(true);
+    }
   }
 
+  // Lo que el testigo encuadra junto a Juan (null = nada en especial).
+  function fijarObjetivo(punto) {
+    objetivo.hay = !!punto;
+    if (punto) objetivo.punto.copy(punto);
+  }
+
+  // Juan se ve en las vistas desde fuera (y durante el cambio).
+  const juanVisible = () => modoVista.actual !== 'juan' || modoVista.transicion < 1;
+  const modo = () => modoVista.actual;
+
   return {
-    camara, guia, arrastrar, actualizar, ajustarAspecto, palanca, caminar, verDesdeFuera,
-    ojo, vista, tercera,
+    camara, guia, arrastrar, actualizar, ajustarAspecto, palanca, caminar, fijarModo, fijarObjetivo,
+    juanVisible, modo, ojo, vista,
   };
 }

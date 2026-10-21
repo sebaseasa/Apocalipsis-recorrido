@@ -153,16 +153,22 @@ function fijarCaminar(valor) {
 }
 botonCaminar.addEventListener('click', () => fijarCaminar(!caminando));
 
-// Ver con los ojos de Juan, o desde fuera (detrás de él).
+// Tres formas de ver, con un botón que las va cambiando:
+// con los ojos de Juan, detrás de Juan, o como testigo desde otro lugar de la cueva.
 const botonVista = document.getElementById('boton-vista');
-let desdeFuera = false;
-function fijarVista(valor) {
-  desdeFuera = valor;
-  cam.verDesdeFuera(valor);
-  botonVista.textContent = valor ? '👁 Ser Juan' : '👁 Desde fuera';
-  botonVista.classList.toggle('activo', valor);
+const VISTAS = [
+  { modo: 'juan', texto: '👁 Vista: Juan' },
+  { modo: 'detras', texto: '👁 Vista: Detrás' },
+  { modo: 'testigo', texto: '👁 Vista: Testigo' },
+];
+let vistaActual = 0;
+function fijarVista(indice) {
+  vistaActual = indice;
+  cam.fijarModo(VISTAS[indice].modo);
+  botonVista.textContent = VISTAS[indice].texto;
+  botonVista.classList.toggle('activo', indice > 0);
 }
-botonVista.addEventListener('click', () => fijarVista(!desdeFuera));
+botonVista.addEventListener('click', () => fijarVista((vistaActual + 1) % VISTAS.length));
 crearPalanca(palanca, (x, y) => cam.palanca(x, y));
 
 function limpiar() {
@@ -246,9 +252,11 @@ renderer.setAnimationLoop(() => {
   mundo.simbolos.actualizar(t);
   // Jesús vuelve el rostro hacia Juan (sobre todo al caminar).
   if (mundo.vista === 'cueva') mundo.figura.mirarHacia(cam.ojo, dt);
+  // El testigo encuadra a Juan junto con Jesús cuando Él está presente.
+  cam.fijarObjetivo(mundo.figura.estado.presencia > 0.3 ? mundo.figura.punto('pecho') : null);
   cam.actualizar(t, dt);
   // Desde fuera: Juan ocupa el lugar de los ojos; si los ojos bajan al suelo, cae (1:17).
-  juan.grupo.visible = mundo.vista === 'cueva' && cam.tercera.mezcla > 0.05;
+  juan.grupo.visible = mundo.vista === 'cueva' && cam.juanVisible();
   if (juan.grupo.visible) {
     const caida = THREE.MathUtils.clamp((1.6 - cam.ojo.y) / 1.3, 0, 1);
     juan.colocar(cam.ojo, cam.vista.giro, caida);
