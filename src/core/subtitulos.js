@@ -1,4 +1,4 @@
-import { esperar } from './tiempo.js';
+import { esperar, ritmoNormal } from './tiempo.js';
 
 const caja = document.getElementById('subtitulo');
 let versiculos = {};
@@ -32,6 +32,7 @@ export function tiempoLectura(texto) {
 
 // Muestra una parte de un versículo y espera lo necesario para leerla.
 export async function leer(ref, parte, extra = 0) {
+  ritmoNormal(); // cada texto nuevo se muestra a velocidad normal
   const texto = versiculos[ref]?.[parte] ?? '';
   mostrarSubtitulo(`Apocalipsis ${ref}`, texto);
   await esperar(tiempoLectura(texto) + extra);

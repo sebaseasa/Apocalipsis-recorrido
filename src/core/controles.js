@@ -1,3 +1,5 @@
+import { acelerar, ritmoNormal } from './tiempo.js';
+
 // Toques y arrastre. Un toque corto avanza; arrastrar mira alrededor.
 
 export function crearControles(elemento, { alTocar, alArrastrar }) {
@@ -32,18 +34,34 @@ const aviso = document.getElementById('aviso');
 let pendiente = null;
 
 export function esperarToque() {
+  ritmoNormal();
+  aviso.textContent = 'Toca para continuar';
   aviso.classList.add('visible');
   return new Promise((resolver) => {
     pendiente = resolver;
   });
 }
 
+// Devuelve true si el toque servía para continuar (había un aviso esperando).
 export function toqueRecibido() {
-  if (!pendiente) return;
+  if (!pendiente) return false;
   const r = pendiente;
   pendiente = null;
   aviso.classList.remove('visible');
   r();
+  return true;
+}
+
+// Toque en medio de un momento: adelanta hasta el siguiente texto.
+let ocultarAviso;
+export function avanzarRapido() {
+  acelerar();
+  aviso.textContent = 'Avanzando ⏩';
+  aviso.classList.add('visible');
+  clearTimeout(ocultarAviso);
+  ocultarAviso = setTimeout(() => {
+    if (!pendiente) aviso.classList.remove('visible');
+  }, 900);
 }
 
 export function cancelarToque() {

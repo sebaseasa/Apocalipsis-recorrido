@@ -3,12 +3,13 @@
 
 const activas = [];
 let ahora = 0;
+let ritmo = 1; // 1 = normal; más alto = avanzar rápido
 
 export const suave = (t) => t * t * (3 - 2 * t);
 export const lineal = (t) => t;
 
-export function actualizarTiempo(t) {
-  ahora = t;
+export function actualizarTiempo(dt) {
+  ahora += dt * ritmo;
   for (let i = activas.length - 1; i >= 0; i--) {
     const a = activas[i];
     const p = Math.min((ahora - a.inicio) / a.duracion, 1);
@@ -31,7 +32,19 @@ export function esperar(segundos) {
   return animar(segundos, () => {}, lineal);
 }
 
+// Avanzar rápido: el guion corre varias veces más deprisa hasta el siguiente texto o pausa.
+export function acelerar() {
+  ritmo = 8;
+}
+
+export function ritmoNormal() {
+  ritmo = 1;
+}
+
+export const acelerado = () => ritmo > 1;
+
 // Corta todo lo pendiente (para volver a empezar). Las promesas viejas no continúan.
 export function cancelarTodo() {
   activas.length = 0;
+  ritmo = 1;
 }

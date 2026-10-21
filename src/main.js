@@ -5,7 +5,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { actualizarTiempo, cancelarTodo } from './core/tiempo.js';
 import { crearCamaraGuiada } from './core/camaraGuiada.js';
-import { crearControles, toqueRecibido, cancelarToque } from './core/controles.js';
+import { crearControles, toqueRecibido, cancelarToque, avanzarRapido } from './core/controles.js';
 import { crearDetector } from './core/rendimiento.js';
 import { cargarTexto, ocultarSubtitulo } from './core/subtitulos.js';
 import { ocultarCierre } from './core/pantalla.js';
@@ -55,7 +55,10 @@ window.addEventListener('resize', alCambiarTamano);
 alCambiarTamano();
 
 crearControles(document.body, {
-  alTocar: toqueRecibido,
+  // Un toque continúa si hay aviso; si no, adelanta hasta el siguiente texto.
+  alTocar: () => {
+    if (!toqueRecibido() && enMarcha && inicio.hidden && document.getElementById('cierre').hidden) avanzarRapido();
+  },
   alArrastrar: cam.arrastrar,
 });
 
@@ -115,7 +118,7 @@ renderer.setAnimationLoop(() => {
   const dt = Math.min(reloj.getDelta(), 0.1);
   t += dt * velocidad;
   detector.medir(dt);
-  actualizarTiempo(t);
+  actualizarTiempo(dt * velocidad);
   mundo.actualizar(t);
   cam.actualizar(t, dt);
   if (usarBrillo) composer.render();
