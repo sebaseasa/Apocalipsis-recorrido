@@ -1,6 +1,8 @@
 # Apocalipsis: recorrido inmersivo
 
 ## Visión
+**Es una Biblia inmersiva**, organizada como la Biblia: por capítulos y versículos (en pantalla nunca se dice "escena"; internamente las carpetas siguen llamándose scenes/01-patmos, etc.).
+
 Experiencia 3D en primera persona donde el visitante "entra" al libro de Apocalipsis y vive los versículos en carne propia. Se usará en una célula (grupo pequeño de iglesia, varios hermanos mayores de 60 años), proyectada en una pantalla, y también desde el celular.
 
 El tono es reverente, cinematográfico y esperanzador. Nada de terror ni gore: lo impactante viene de la escala, la luz, el sonido y el silencio, no de lo grotesco.

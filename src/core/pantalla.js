@@ -39,7 +39,7 @@ export function reiniciarCalidez() {
 }
 
 export function mostrarPaso(n) {
-  paso.textContent = `${n} / 8`;
+  paso.textContent = `Apocalipsis 1 · ${n} de 8`;
 }
 
 export function mostrarPasoTexto(texto) {

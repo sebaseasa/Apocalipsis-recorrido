@@ -1,4 +1,4 @@
-# Guion de voces · Escena 1 (Apocalipsis 1:9-20)
+# Guion de voces · Apocalipsis 1:9-20
 
 Para generar en ElevenLabs. Son **2 voces** y **25 frases**, más una opcional.
 Cada frase es **un archivo MP3 aparte**, con el nombre exacto de la columna "Archivo".

@@ -439,3 +439,10 @@ button:disabled {
   font-size: clamp(18px, 4vmin, 26px);
   padding: 0.45em 1.4em;
 }
+
+.titulo-capitulo {
+  margin: 0.4em 0 0;
+  font-size: clamp(16px, 3.6vmin, 22px);
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}

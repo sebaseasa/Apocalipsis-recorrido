@@ -108,7 +108,7 @@ export async function cartas(mundo, cam, indices) {
     const ig = IGLESIAS[k];
     const vela = ig.vela;
     const pVela = candeleros.posiciones[vela];
-    mostrarPasoTexto(`${ig.nombre} · ${ig.ref}`);
+    mostrarPasoTexto(`Apocalipsis ${ig.ref} · ${ig.nombre}`);
 
     // 1. Vuelo sobre el mapa hasta la ciudad.
     const lugar = LUGARES.find((l) => l.nombre === ig.nombre);

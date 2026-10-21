@@ -81,14 +81,14 @@ crearControles(document.body, {
 
 // Menú de inicio. El audio del celular solo arranca después de un toque, por eso
 // todo empieza al tocar una opción.
-const lista = document.getElementById('lista-iglesias');
+// Una carta por botón, agrupadas por capítulo, con sus versículos.
 IGLESIAS.forEach((ig, k) => {
   const b = document.createElement('button');
   b.type = 'button';
   b.dataset.escena = '2';
   b.dataset.iglesia = String(k);
-  b.innerHTML = `${ig.nombre}<small>${ig.ref}</small>`;
-  lista.appendChild(b);
+  b.innerHTML = `${ig.nombre}<small>Versículos ${ig.desde} al ${ig.hasta}</small>`;
+  document.getElementById(`lista-cap${ig.cap}`).appendChild(b);
 });
 
 alProgreso((p) => (carga.textContent = `Cargando… ${Math.round(p * 100)}%`));

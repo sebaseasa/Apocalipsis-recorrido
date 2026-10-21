@@ -1,4 +1,4 @@
-# Guion · Escena 2: Las cartas a las siete iglesias (Apocalipsis 2-3)
+# Guion · Apocalipsis 2-3: Las cartas a las siete iglesias
 
 **Decisiones de Sebastián:** menú con ambas opciones (las siete seguidas o una sola iglesia), pensado también para enseñar; preguntas aprobadas (se muestran como "Para reflexionar"); nombres de las ciudades como en la RV 1909. Las imágenes se revisan viéndolas en el celular.
 
