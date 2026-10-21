@@ -360,7 +360,7 @@ export function crearCielo() {
       const m = o.material;
       if (m?.metalness > 0.5) {
         m.envMap = env;
-        m.envMapIntensity = m === vidrio ? 0.6 : 0.5;
+        m.envMapIntensity = m === vidrio ? 0.35 : 0.5;
         m.needsUpdate = true;
       }
     });
@@ -398,10 +398,10 @@ export function crearCielo() {
     for (const m of materialesTrono) m.opacity = estado.trono;
     const s = estado.sentado;
     const pulso = 1 + Math.sin(t * 0.7) * 0.04;
-    jaspe.material.opacity = Math.min(0.85, s) * pulso;
-    jaspe2.material.opacity = s * 0.6;
+    jaspe.material.opacity = Math.min(0.7, s * 0.7) * pulso;
+    jaspe2.material.opacity = s * 0.4;
     sardio.material.opacity = Math.min(1, s * 0.85) * pulso;
-    rayos.material.opacity = s * 0.22;
+    rayos.material.opacity = s * 0.15;
     rayos.material.rotation = t * 0.015;
     luzTrono.intensity = s * 18 * pulso;
     arco.material.uniforms.uNivel.value = estado.arco;
@@ -421,9 +421,9 @@ export function crearCielo() {
     luzLamparas.intensity = fuego * 1.2;
 
     // Mar de vidrio.
-    vidrio.opacity = estado.mar * 0.92;
+    vidrio.opacity = estado.mar * 0.7;
     mar.visible = estado.mar > 0.001;
-    reflejo.material.opacity = estado.mar * s * 0.55;
+    reflejo.material.opacity = estado.mar * s * 0.12;
 
     ancianos.actualizar(t);
     seres.actualizar(t);

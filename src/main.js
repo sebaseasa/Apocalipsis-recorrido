@@ -287,7 +287,8 @@ renderer.setAnimationLoop(() => {
   const camara = enTierra ? mundo.tierra.camara : cam.camara;
   if (enCielo) mundo.cielo.actualizar(t, dt * velocidad);
   // En el cielo hay mucha claridad: el brillo solo toca las luces, no las esculturas.
-  brillo.strength = enCielo ? 0.45 : 0.75;
+  brillo.strength = enCielo ? 0.3 : 0.75;
+  brillo.radius = enCielo ? 0.15 : 0.6;
   brillo.threshold = enCielo ? 0.97 : 0.82;
   if (enTierra) {
     mundo.tierra.actualizar(t);
