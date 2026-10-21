@@ -1,10 +1,22 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 // Carga de texturas desde /public/assets, con aviso de progreso.
 
 const base = import.meta.env.BASE_URL;
 const gestor = new THREE.LoadingManager();
 const cargador = new THREE.TextureLoader(gestor);
+
+// Modelos .glb comprimidos con Draco (el descompresor está en /public/draco).
+const draco = new DRACOLoader(gestor);
+draco.setDecoderPath(`${base}draco/`);
+const cargadorGLTF = new GLTFLoader(gestor);
+cargadorGLTF.setDRACOLoader(draco);
+
+export function modelo(ruta, alCargar) {
+  cargadorGLTF.load(base + ruta, (gltf) => alCargar(gltf.scene));
+}
 
 export function alProgreso(fn) {
   gestor.onProgress = (_url, cargados, total) => fn(cargados / total);
