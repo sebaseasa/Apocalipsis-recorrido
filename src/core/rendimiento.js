@@ -17,6 +17,8 @@ export function crearDetector(aplicar) {
     ? document.getElementById('fps')
     : null;
   if (marcador) marcador.hidden = false;
+  // ?fija mantiene la calidad máxima (solo para pruebas).
+  const fija = new URLSearchParams(location.search).has('fija');
 
   aplicar(NIVELES[nivel]);
 
@@ -29,7 +31,7 @@ export function crearDetector(aplicar) {
     acumulado = 0;
     // Dos mediciones seguidas bajo 27 fps: bajamos un nivel.
     lentos = fps < 27 ? lentos + 1 : 0;
-    if (lentos >= 2 && nivel < NIVELES.length - 1) {
+    if (!fija && lentos >= 2 && nivel < NIVELES.length - 1) {
       nivel++;
       lentos = 0;
       aplicar(NIVELES[nivel]);

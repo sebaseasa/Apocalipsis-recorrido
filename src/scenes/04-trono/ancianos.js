@@ -42,8 +42,9 @@ export function crearAncianos(centro, oro) {
   const niveles = new Float32Array(N);
 
   // --- Sillas: piedra blanca con bordes de oro ---
-  const piedra = conNivel(new THREE.MeshStandardMaterial({ color: 0xf1ede4, roughness: 0.45 }));
-  const oroSilla = conNivel(oro.clone());
+  const piedra = conNivel(new THREE.MeshStandardMaterial({ color: 0xa89c88, roughness: 0.5 }));
+  // (el oro del trono empieza invisible; aquí cada copia lleva su propio nivel)
+  const oroSilla = conNivel(Object.assign(oro.clone(), { opacity: 1 }));
   const partesPiedra = [
     new THREE.BoxGeometry(0.85, ASIENTO, 0.6).translate(0, ASIENTO / 2, -0.17),
     new THREE.BoxGeometry(0.85, 1.55, 0.12).translate(0, 0.78, -0.5),
@@ -67,7 +68,7 @@ export function crearAncianos(centro, oro) {
     puntas.push(new THREE.ConeGeometry(0.03, 0.11, 6).translate(Math.sin(a) * 0.145, 0.1, Math.cos(a) * 0.145));
   }
   const geoCorona = mergeGeometries([aro.toNonIndexed(), ...puntas.map((g) => g.toNonIndexed())]);
-  const oroCorona = conNivel(oro.clone());
+  const oroCorona = conNivel(Object.assign(oro.clone(), { opacity: 1 }));
   oroCorona.side = THREE.DoubleSide;
   oroCorona.emissive = new THREE.Color(0xffb040);
   oroCorona.emissiveIntensity = 0;
@@ -93,7 +94,7 @@ export function crearAncianos(centro, oro) {
       float h = vLocal.y / ${ALTO.toFixed(3)};
       float cabeza = smoothstep(0.8, 0.83, h);
       float rostro = cabeza * smoothstep(-0.07, -0.04, vLocal.z) * smoothstep(0.85, 0.87, h) * (1.0 - smoothstep(0.93, 0.95, h));
-      vec3 zona = mix(vec3(0.97, 0.96, 0.93), vec3(0.86, 0.85, 0.82), cabeza);
+      vec3 zona = mix(vec3(0.86, 0.85, 0.82), vec3(0.72, 0.71, 0.69), cabeza);
       zona = mix(zona, vec3(0.78, 0.6, 0.48), rostro);
       diffuseColor.rgb *= zona;`
     );

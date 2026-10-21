@@ -260,11 +260,11 @@ export function crearCielo() {
   const jaspe = crearResplandor(0xf2fff8, 1);
   jaspe.scale.set(2.2, 3.4, 1);
   const jaspe2 = crearResplandor(0xffffff, 1.4);
-  const sardio = crearResplandor(0xff2a0c, 6.5);
+  const sardio = crearResplandor(0xff2a0c, 5);
   const rayos = new THREE.Sprite(
     new THREE.SpriteMaterial({ map: texturaRayos(), color: 0xfff0d6, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
   );
-  rayos.scale.setScalar(13);
+  rayos.scale.setScalar(10);
   presencia.add(rayos, sardio, jaspe, jaspe2);
 
   // El arco alrededor del trono, como esmeralda.
@@ -381,8 +381,8 @@ export function crearCielo() {
       r.s.visible = r.vida > 0;
     }
     const luz = 1 - noche;
-    ambiente.intensity = 0.45 * luz + estado.destello * 1.5;
-    frente.intensity = 1.6 * luz;
+    ambiente.intensity = 0.3 * luz + estado.destello * 1.5;
+    frente.intensity = 1.2 * luz;
     escena.fog.density = 0.006 * luz;
 
     // Puerta.

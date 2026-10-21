@@ -97,10 +97,10 @@ export function crearSeres(centro) {
   const estado = { nivel: 0, ojos: 0, santo: 0, gloria: 0 };
 
   const marfil = new THREE.MeshStandardMaterial({
-    color: 0xf4ead2, roughness: 0.5, metalness: 0, emissive: 0xffd890, emissiveIntensity: 0, transparent: true, opacity: 0,
+    color: 0xc9b48c, roughness: 0.45, metalness: 0, emissive: 0xffd890, emissiveIntensity: 0, transparent: true, opacity: 0,
   });
   const plumas = new THREE.MeshStandardMaterial({
-    color: 0xf6efe0, roughness: 0.7, emissive: 0xfff0d0, emissiveIntensity: 0, side: THREE.DoubleSide, transparent: true, opacity: 0,
+    color: 0xd8cdb6, roughness: 0.7, emissive: 0xfff0d0, emissiveIntensity: 0, side: THREE.DoubleSide, transparent: true, opacity: 0,
   });
   const uniformesOjos = {
     uMapa: { value: texturaOjo() },
@@ -176,8 +176,8 @@ export function crearSeres(centro) {
     grupo.visible = n > 0.001;
     marfil.opacity = n;
     plumas.opacity = n * 0.95;
-    marfil.emissiveIntensity = 0.04 + estado.gloria * 0.3;
-    plumas.emissiveIntensity = 0.06 + estado.gloria * 0.35;
+    marfil.emissiveIntensity = estado.gloria * 0.2;
+    plumas.emissiveIntensity = estado.gloria * 0.25;
     uniformesOjos.uNivel.value = estado.ojos * n;
     uniformesOjos.uBrillo.value = estado.santo * 0.6 + estado.gloria * 0.4;
     uniformesOjos.uTiempo.value = t;
