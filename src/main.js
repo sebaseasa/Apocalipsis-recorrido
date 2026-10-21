@@ -113,6 +113,21 @@ Promise.all([cargarTexto(`${base}text/apocalipsis-1.json`), cargarTexto(`${base}
 
 let enMarcha = false;
 
+// Los botones se esconden solos a los 4 segundos sin tocar la pantalla y vuelven
+// al tocar o mover el dedo. En pausa se quedan visibles.
+let esconderBarra;
+function mostrarBarra() {
+  barra.classList.remove('oculta');
+  palanca.classList.remove('oculta');
+  clearTimeout(esconderBarra);
+  esconderBarra = setTimeout(() => {
+    if (estaPausado()) return;
+    barra.classList.add('oculta');
+    palanca.classList.add('oculta');
+  }, 4000);
+}
+for (const ev of ['pointerdown', 'pointermove']) document.addEventListener(ev, mostrarBarra, { passive: true });
+
 // Pausa / seguir.
 function fijarPausa(valor) {
   pausar(valor);
@@ -120,6 +135,7 @@ function fijarPausa(valor) {
   avisoPausa(valor);
   botonPausa.textContent = valor ? '▶ Seguir' : '⏸ Pausa';
   botonPausa.classList.toggle('activo', valor);
+  mostrarBarra();
 }
 botonPausa.addEventListener('click', () => fijarPausa(!estaPausado()));
 
@@ -162,6 +178,7 @@ async function empezar(escena, iglesia) {
   limpiar();
   enMarcha = true;
   barra.hidden = false;
+  mostrarBarra();
   if (escena === '1') {
     await recorrido(mundo, cam);
   } else {
