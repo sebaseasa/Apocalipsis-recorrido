@@ -22,12 +22,32 @@
       <div id="subtitulo" class="subtitulo" aria-live="polite"></div>
     </div>
 
+    <button id="boton-menu" class="boton-menu" type="button" hidden>☰ Menú</button>
+
     <section id="inicio" class="inicio">
       <h1>Apocalipsis</h1>
-      <p class="escena">Escena 1 · Patmos</p>
-      <p class="cita">Apocalipsis 1:9-18</p>
-      <button id="entrar" type="button" disabled>Cargando…</button>
+      <p class="cita">Texto: Reina-Valera 1909</p>
+      <p id="carga" class="nota">Cargando…</p>
+      <div id="menu" class="menu" hidden>
+        <button class="opcion" type="button" data-escena="1">
+          Escena 1 · Patmos<small>Apocalipsis 1:9-20</small>
+        </button>
+        <p class="titulo-grupo">Escena 2 · Las cartas a las siete iglesias<small>Apocalipsis 2-3</small></p>
+        <button class="opcion" type="button" data-escena="2" data-iglesia="todas">Las siete seguidas</button>
+        <div id="lista-iglesias" class="lista-iglesias"></div>
+      </div>
       <p class="nota">Sube el volumen 🔊</p>
+    </section>
+
+    <section id="reflexion" class="reflexion" hidden>
+      <p class="iglesia" id="reflexion-iglesia"></p>
+      <p class="etiqueta">Para reflexionar</p>
+      <p class="pregunta" id="reflexion-pregunta"></p>
+      <div class="botones">
+        <button id="reflexion-siguiente" type="button">Siguiente iglesia</button>
+        <button id="reflexion-repetir" type="button">Repetir esta carta</button>
+        <button id="reflexion-menu" type="button">Menú</button>
+      </div>
     </section>
 
     <section id="cierre" class="cierre" hidden>
@@ -36,7 +56,10 @@
         <figcaption>Alberto Durero, <em>La visión de los siete candeleros</em>, 1498</figcaption>
       </figure>
       <p class="pregunta">¿Qué te dice que Jesús camine en medio de su iglesia?</p>
-      <button id="otra-vez" type="button">Volver a empezar</button>
+      <div class="botones">
+        <button id="otra-vez" type="button">Volver a empezar</button>
+        <button id="cierre-menu" type="button">Menú</button>
+      </div>
     </section>
 
     <script type="module" src="/src/main.js"></script>

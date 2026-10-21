@@ -84,6 +84,16 @@ body {
   display: none;
 }
 
+.rotulo.tenue.visible {
+  opacity: 0.35;
+}
+
+.rotulo.resaltado {
+  font-size: clamp(24px, 6vmin, 44px);
+  color: #f2c46d;
+  font-weight: bold;
+}
+
 .rotulo.isla {
   font-size: clamp(20px, 5vmin, 38px);
   color: #f2c46d;
@@ -299,4 +309,133 @@ button:disabled {
 .cierre button {
   color: #3a2a14;
   border-color: #8a6a3a;
+}
+
+/* Menú de inicio */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7em;
+  width: min(92vw, 640px);
+}
+
+.opcion {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  padding: 0.5em 1em;
+}
+
+.opcion small,
+.titulo-grupo small {
+  font-size: 0.6em;
+  opacity: 0.75;
+}
+
+.titulo-grupo {
+  display: flex;
+  flex-direction: column;
+  margin: 1em 0 0;
+  font-size: clamp(18px, 4.2vmin, 28px);
+  color: #f2c46d;
+}
+
+.lista-iglesias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5em, 1fr));
+  gap: 0.5em;
+  width: 100%;
+}
+
+.lista-iglesias button {
+  font-size: clamp(17px, 3.8vmin, 24px);
+  padding: 0.45em 0.6em;
+  border-radius: 14px;
+}
+
+.lista-iglesias button small {
+  display: block;
+  font-size: 0.65em;
+  opacity: 0.7;
+}
+
+.inicio {
+  overflow-y: auto;
+  justify-content: flex-start;
+  padding-top: max(8vh, 24px);
+}
+
+/* Botón para volver al menú durante el recorrido */
+.boton-menu {
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top));
+  right: 10px;
+  font-size: 15px;
+  padding: 0.35em 0.9em;
+  border-width: 1px;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0.75;
+  z-index: 5;
+}
+
+.fps {
+  top: 52px;
+}
+
+/* Para reflexionar (al final de cada carta) */
+.reflexion {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8em;
+  padding: 24px;
+  box-sizing: border-box;
+  text-align: center;
+  background: rgba(10, 6, 2, 0.82);
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.reflexion.visible {
+  opacity: 1;
+}
+
+.reflexion .iglesia {
+  margin: 0;
+  color: #f2c46d;
+  font-size: clamp(18px, 4vmin, 28px);
+  letter-spacing: 0.05em;
+}
+
+.reflexion .etiqueta {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  font-size: clamp(14px, 3vmin, 20px);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.reflexion .pregunta,
+.cierre .pregunta {
+  max-width: 900px;
+}
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6em;
+  margin-top: 0.6em;
+}
+
+.botones button {
+  font-size: clamp(18px, 4vmin, 26px);
+  padding: 0.45em 1.4em;
 }

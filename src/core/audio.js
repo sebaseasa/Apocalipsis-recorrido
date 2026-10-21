@@ -320,3 +320,35 @@ export function destello(grave = false) {
     o.stop(t0 + 2.6);
   });
 }
+
+// Tres golpes suaves en una puerta de madera (3:20 "estoy á la puerta y llamo").
+export function llamar() {
+  if (!ctx) return;
+  const t0 = ctx.currentTime;
+  [0, 0.45, 0.9].forEach((d) => {
+    const t = t0 + d;
+    const o = ctx.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(180, t);
+    o.frequency.exponentialRampToValueAtTime(90, t + 0.12);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.5, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+    o.connect(g).connect(buses.efectos);
+    g.connect(reverb);
+    o.start(t);
+    o.stop(t + 0.3);
+    const golpe = ctx.createBufferSource();
+    golpe.buffer = ruidoBlanco;
+    const f = ctx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.value = 900;
+    f.Q.value = 1.5;
+    const gg = ctx.createGain();
+    gg.gain.setValueAtTime(0.35, t);
+    gg.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+    golpe.connect(f).connect(gg).connect(buses.efectos);
+    golpe.start(t, Math.random() * 3);
+    golpe.stop(t + 0.1);
+  });
+}

@@ -16,12 +16,12 @@ export function puntoGeo(lat, lon, r = 1) {
 
 export const PATMOS = { lat: 37.31, lon: 26.55 };
 
-const LUGARES = [
+export const LUGARES = [
   { nombre: 'Mar Egeo', lat: 38.6, lon: 25.0, desde: 0.07, hasta: 0.6, tipo: 'region' },
   { nombre: 'Grecia', lat: 39.4, lon: 22.2, desde: 0.07, hasta: 0.6, tipo: 'region' },
   { nombre: 'Asia (hoy Turquía)', lat: 39.4, lon: 30.2, desde: 0.07, hasta: 0.6, tipo: 'region' },
-  { nombre: 'Éfeso', lat: 37.94, lon: 27.34, desde: 0.006, hasta: 0.1, tipo: 'iglesia' },
-  { nombre: 'Esmirna', lat: 38.42, lon: 27.14, desde: 0.008, hasta: 0.1, tipo: 'iglesia' },
+  { nombre: 'Efeso', lat: 37.94, lon: 27.34, desde: 0.006, hasta: 0.1, tipo: 'iglesia' },
+  { nombre: 'Smirna', lat: 38.42, lon: 27.14, desde: 0.008, hasta: 0.1, tipo: 'iglesia' },
   { nombre: 'Pérgamo', lat: 39.12, lon: 27.18, desde: 0.008, hasta: 0.1, tipo: 'iglesia' },
   { nombre: 'Tiatira', lat: 38.92, lon: 27.84, desde: 0.008, hasta: 0.1, tipo: 'iglesia' },
   { nombre: 'Sardis', lat: 38.49, lon: 28.04, desde: 0.008, hasta: 0.1, tipo: 'iglesia' },
@@ -182,10 +182,14 @@ export function crearTierra() {
     dir.copy(a.dir).applyQuaternion(q);
     // La altura cambia en escala logarítmica (de 16 000 km a unos 12 km).
     const alt = Math.exp(THREE.MathUtils.lerp(Math.log(a.alt), Math.log(b.alt), f));
+    posicionar(dir, alt, THREE.MathUtils.smoothstep(s, 0.8, 1));
+  }
+
+  // Cámara sobre un punto (dirección desde el centro de la Tierra) a cierta altura.
+  // "inclinar" (0 a 1) la mueve un poco al sur para ver el suelo con perspectiva.
+  function posicionar(dir, alt, inclinar = 0) {
     estado.altura = alt;
-    // Abajo del todo la cámara se inclina un poco, para ver la isla con perspectiva.
     const sur = tmp.set(0, -1, 0).projectOnPlane(dir).normalize();
-    const inclinar = THREE.MathUtils.smoothstep(s, 0.8, 1);
     camara.position.copy(dir).multiplyScalar(1 + alt).addScaledVector(sur, alt * 0.9 * inclinar);
     const mirarSuelo = THREE.MathUtils.clamp(1 - alt / 0.8, 0, 1) ** 2;
     objetivo.copy(dir).multiplyScalar(mirarSuelo);
@@ -197,6 +201,25 @@ export function crearTierra() {
 
     // Cada acercamiento aparece al bajar de su altura (opaco del todo bajo "bajo").
     for (const c of capas) c.m.material.uniforms.uOpacidad.value = 1 - THREE.MathUtils.smoothstep(alt, c.bajo, c.alto);
+  }
+
+  // Vuelo entre dos lugares del mapa: [lat, lon, altura] → [lat, lon, altura], con p de 0 a 1.
+  const dA = new THREE.Vector3();
+  const dB = new THREE.Vector3();
+  function volar(desde, hasta, p) {
+    dA.copy(puntoGeo(desde[0], desde[1])).normalize();
+    dB.copy(puntoGeo(hasta[0], hasta[1])).normalize();
+    qa.setFromUnitVectors(dA, dB);
+    q.identity().slerp(qa, p);
+    dir.copy(dA).applyQuaternion(q);
+    const alt = Math.exp(THREE.MathUtils.lerp(Math.log(desde[2]), Math.log(hasta[2]), p));
+    posicionar(dir, alt, 0.5);
+  }
+
+  // Resalta el nombre de una ciudad (los demás quedan tenues). null = todos iguales.
+  function resaltar(nombre) {
+    for (const r of rotulos) r.el.classList.toggle('tenue', nombre !== null && r.tipo === 'iglesia' && r.nombre !== nombre);
+    for (const r of rotulos) r.el.classList.toggle('resaltado', r.nombre === nombre);
   }
 
   function actualizarRotulos() {
@@ -230,5 +253,5 @@ export function crearTierra() {
   }
 
   colocar(0);
-  return { escena, camara, estado, colocar, actualizarRotulos, mostrar, ajustarAspecto };
+  return { escena, camara, estado, colocar, volar, resaltar, actualizarRotulos, mostrar, ajustarAspecto };
 }

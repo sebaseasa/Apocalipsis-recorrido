@@ -42,6 +42,36 @@ export function mostrarPaso(n) {
   paso.textContent = `${n} / 8`;
 }
 
+export function mostrarPasoTexto(texto) {
+  paso.textContent = texto;
+}
+
+// Tarjeta "Para reflexionar" al final de cada carta. Devuelve la elección:
+// 'siguiente', 'repetir' o 'menu'.
+const reflexion = document.getElementById('reflexion');
+export function pedirReflexion(iglesia, haySiguiente) {
+  document.getElementById('reflexion-iglesia').textContent = `Iglesia en ${iglesia.nombre} · Apocalipsis ${iglesia.ref}`;
+  document.getElementById('reflexion-pregunta').textContent = iglesia.pregunta;
+  const siguiente = document.getElementById('reflexion-siguiente');
+  siguiente.hidden = !haySiguiente;
+  reflexion.hidden = false;
+  requestAnimationFrame(() => reflexion.classList.add('visible'));
+  return new Promise((resolver) => {
+    const elegir = (valor) => () => {
+      ocultarReflexion();
+      resolver(valor);
+    };
+    siguiente.onclick = elegir('siguiente');
+    document.getElementById('reflexion-repetir').onclick = elegir('repetir');
+    document.getElementById('reflexion-menu').onclick = elegir('menu');
+  });
+}
+
+export function ocultarReflexion() {
+  reflexion.classList.remove('visible');
+  reflexion.hidden = true;
+}
+
 document.getElementById('grabado').src = `${import.meta.env.BASE_URL}assets/textures/durero-siete-candeleros.webp`;
 
 export function mostrarCierre() {

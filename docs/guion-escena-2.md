@@ -1,6 +1,6 @@
 # Guion · Escena 2: Las cartas a las siete iglesias (Apocalipsis 2-3)
 
-Borrador para que Sebastián lo revise **antes** de construir. Nada de esto está programado todavía.
+**Decisiones de Sebastián:** menú con ambas opciones (las siete seguidas o una sola iglesia), pensado también para enseñar; preguntas aprobadas (se muestran como "Para reflexionar"); nombres de las ciudades como en la RV 1909. Las imágenes se revisan viéndolas en el celular.
 
 ## Reglas que sigue este guion
 
@@ -22,7 +22,7 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 2. Regreso a la visión: Jesús camina entre los candeleros (📖 2:1: "el cual anda en medio de los siete candeleros") y se detiene junto al de esa iglesia (💡 que se ilumina un poco más que los otros).
 3. Se lee la carta completa, versículo por versículo, con las imágenes de abajo.
 4. "El que tiene oído, oiga lo que el Espíritu dice á las iglesias": 💡 las siete llamas brillan juntas un instante (la carta es para todas).
-5. Pregunta para la célula (propuesta, para que la apruebes o cambies).
+5. Pantalla "Para reflexionar" con la pregunta, y botones: siguiente iglesia, repetir la carta o volver al menú.
 
 **Duración aproximada:** de 2 a 4 minutos por iglesia leyendo con calma; unos 20 minutos las siete seguidas.
 
@@ -30,7 +30,7 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 
 ---
 
-## 1. Éfeso (2:1-7)
+## 1. Efeso (2:1-7)
 
 **Cómo se presenta Jesús:** "El que tiene las siete estrellas en su diestra, el cual anda en medio de los siete candeleros de oro" (2:1).
 
@@ -38,14 +38,14 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 
 | Versículo | Imagen |
 |---|---|
-| 2:1 | 📖 Volvemos a la visión de la escena 1: Jesús **camina** entre los siete candeleros con las siete estrellas en su diestra y se detiene junto al candelero de Éfeso (el primero, a la izquierda). |
-| 2:2-3 | 💡 Su mirada sobre la llama de Éfeso, que arde firme. Sin otras imágenes: el texto es lo importante. |
-| 2:4 | 💡 "Has dejado tu primer amor": la llama de Éfeso baja un poco. |
+| 2:1 | 📖 Volvemos a la visión de la escena 1: Jesús **camina** entre los siete candeleros con las siete estrellas en su diestra y se detiene junto al candelero de Efeso (el primero, a la izquierda). |
+| 2:2-3 | 💡 Su mirada sobre la llama de Efeso, que arde firme. Sin otras imágenes: el texto es lo importante. |
+| 2:4 | 💡 "Has dejado tu primer amor": la llama de Efeso baja un poco. |
 | 2:5 | 💡 "Quitaré tu candelero de su lugar, si no te hubieres arrepentido": el candelero tiembla y su luz parpadea (es una advertencia condicional, no se apaga). |
 | 2:6 | 💡 La llama se mantiene. |
 | 2:7 | 📖 "El árbol de la vida… en medio del paraíso de Dios": aparece un árbol luminoso al fondo, en medio de una luz dorada. |
 
-**Pregunta propuesta para la célula:** ¿Cómo está hoy mi primer amor por Jesús? ¿Qué "primeras obras" necesito volver a hacer?
+**Para reflexionar:** ¿Cómo está hoy mi primer amor por Jesús? ¿Qué "primeras obras" necesito volver a hacer?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -61,7 +61,7 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 
 ---
 
-## 2. Esmirna (2:8-11)
+## 2. Smirna (2:8-11)
 
 **Cómo se presenta Jesús:** "El primero y postrero, que fué muerto, y vivió" (2:8).
 
@@ -69,12 +69,12 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 
 | Versículo | Imagen |
 |---|---|
-| 2:8 | 💡 Jesús junto al candelero de Esmirna. Se recuerda 1:18: su luz pasa de tenue a plena ("fué muerto, y vivió"). |
+| 2:8 | 💡 Jesús junto al candelero de Smirna. Se recuerda 1:18: su luz pasa de tenue a plena ("fué muerto, y vivió"). |
 | 2:9 | 💡 "Tu pobreza (pero tú eres rico)": la llama, pequeña pero dorada y estable. |
 | 2:10 | 📖 "Sé fiel hasta la muerte, y yo te daré la corona de la vida": aparece sobre el candelero una corona de luz dorada. |
 | 2:11 | 💡 La corona permanece. |
 
-**Pregunta propuesta para la célula:** ¿Qué me ayuda a seguir fiel cuando paso por pruebas?
+**Para reflexionar:** ¿Qué me ayuda a seguir fiel cuando paso por pruebas?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -101,7 +101,7 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 | 2:16 | 💡 "Pelearé contra ellos con la espada de mi boca": la espada brilla con más fuerza. |
 | 2:17 | 📖 "Maná escondido… una piedrecita blanca, y en la piedrecita un nombre nuevo escrito, el cual ninguno conoce": aparece una piedrecita blanca luminosa con un nombre que no se alcanza a leer. |
 
-**Pregunta propuesta para la célula:** ¿En qué áreas de mi vida me cuesta no "negar su nombre"?
+**Para reflexionar:** ¿En qué áreas de mi vida me cuesta no "negar su nombre"?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -132,7 +132,7 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 | 2:28 | 📖 "Le daré la estrella de la mañana": en lo alto aparece una estrella brillante, como el lucero del amanecer. |
 | 2:29 | 💡 La estrella permanece. |
 
-**Pregunta propuesta para la célula:** ¿Hay algo que Jesús, que ve el corazón, me está pidiendo cambiar?
+**Para reflexionar:** ¿Hay algo que Jesús, que ve el corazón, me está pidiendo cambiar?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -163,10 +163,10 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 |---|---|
 | 3:1 | 💡 Jesús junto al candelero de Sardis, con las siete estrellas en su diestra. "Tienes nombre que vives, y estás muerto": la llama de Sardis es muy débil. (Los siete Espíritus solo se nombran en el texto; se describen hasta el capítulo 4.) |
 | 3:2-3 | 📖 "Sé vigilante… vendré á ti como ladrón": la llama débil parpadea. |
-| 3:4-5 | 📖 "Andarán conmigo en vestiduras blancas… no borraré su nombre del libro de la vida": aparece una vestidura blanca luminosa y un libro abierto. |
+| 3:4-5 | 📖 "No borraré su nombre del libro de la vida": aparece un libro abierto y luminoso. (Las vestiduras blancas quedan solo en el texto.) |
 | 3:6 | 💡 La llama se reaviva un poco. |
 
-**Pregunta propuesta para la célula:** ¿Mi fe está viva por dentro, o solo "tengo nombre que vivo"?
+**Para reflexionar:** ¿Mi fe está viva por dentro, o solo "tengo nombre que vivo"?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -196,7 +196,7 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 | 3:12 | 📖 "Lo haré columna en el templo de mi Dios… la nueva Jerusalem, la cual desciende del cielo": aparece una columna de luz; se sugiere una ciudad luminosa a lo lejos, sin detallarla (se describe hasta el capítulo 21). |
 | 3:13 | 💡 La puerta sigue abierta. |
 
-**Pregunta propuesta para la célula:** ¿Qué "puerta abierta" ha puesto Dios delante de mí o de nuestra célula?
+**Para reflexionar:** ¿Qué "puerta abierta" ha puesto Dios delante de mí o de nuestra célula?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -226,10 +226,10 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 | 3:18 | 📖 "Oro afinado en fuego… vestiduras blancas… colirio, para que veas": aparecen oro que brilla en el fuego y una vestidura blanca. |
 | 3:19 | 💡 "Yo reprendo y castigo á todos los que amo": la luz de Jesús, cálida. |
 | 3:20 | 📖 "He aquí, yo estoy á la puerta y llamo": una puerta cerrada; se oyen golpes suaves en la puerta. Cuando dice "si alguno… abriere la puerta, entraré á él, y cenaré con él", la puerta se abre y entra una luz cálida. |
-| 3:21 | 📖 "Que se siente conmigo en mi trono": se sugiere un trono de luz al fondo (se describe hasta el capítulo 4). |
+| 3:21 | Solo texto (el trono se describe hasta el capítulo 4). |
 | 3:22 | 💡 Cierre de la carta. |
 
-**Pregunta propuesta para la célula:** Jesús está a la puerta y llama: ¿qué significa para mí abrirle hoy?
+**Para reflexionar:** Jesús está a la puerta y llama: ¿qué significa para mí abrirle hoy?
 
 <details><summary>Texto completo (RV 1909)</summary>
 
@@ -246,10 +246,3 @@ Borrador para que Sebastián lo revise **antes** de construir. Nada de esto est�
 </details>
 
 ---
-
-## Preguntas para Sebastián
-
-1. ¿Una iglesia por reunión, las siete seguidas, o ambas opciones con un menú?
-2. ¿Apruebas las imágenes de cada versículo? Marca las que quieras cambiar o quitar.
-3. ¿Apruebas las preguntas para la célula, o prefieres escribirlas tú o con tu pastor?
-4. Nombres de las ciudades en el mapa: ¿forma moderna (Éfeso, Esmirna) o la de la RV 1909 (Efeso, Smirna)?

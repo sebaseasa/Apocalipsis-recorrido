@@ -55,6 +55,14 @@ CREDITS.md           licencia y origen de cada asset
 
 Subtítulos siempre visibles, letra grande y legible para personas mayores.
 
+## Escena 2: Las cartas a las siete iglesias (Apocalipsis 2-3)
+Guion detallado en `docs/guion-escena-2.md`. Decisiones de Sebastián:
+- Menú con ambas opciones: las siete cartas seguidas o una sola iglesia. No es solo para la célula: también se usará para enseñar.
+- Texto completo de cada carta (RV 1909 de eBible.org, en `public/text/apocalipsis-2-3.json`), sin recortes.
+- Solo se muestra lo que el texto nombra; lo que no describe (Satanás, Jezabel, personas) no se dibuja.
+- Nombres de las ciudades como en la RV 1909: Efeso, Smirna, Pérgamo, Tiatira, Sardis, Filadelfia, Laodicea.
+- Al final de cada carta, "Para reflexionar" con la pregunta aprobada.
+
 ## Forma de trabajo
 1. Primero, montar el proyecto vacío y publicarlo en GitHub Pages para confirmar que el enlace abre en el Fold 5.
 2. Luego construir la escena 1 con formas simples (cajas y luces) para validar el recorrido y los tiempos.

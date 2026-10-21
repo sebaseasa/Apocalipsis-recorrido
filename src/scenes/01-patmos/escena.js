@@ -56,14 +56,15 @@ export function crearEscena() {
   }
 
   // Nombre de cada iglesia sobre su candelero (1:20), en el orden de Apocalipsis 2-3.
-  const IGLESIAS = ['Éfeso', 'Esmirna', 'Pérgamo', 'Tiatira', 'Sardis', 'Filadelfia', 'Laodicea'];
+  // Nombres como en la Reina-Valera 1909.
+  const IGLESIAS = ['Efeso', 'Smirna', 'Pérgamo', 'Tiatira', 'Sardis', 'Filadelfia', 'Laodicea'];
   const contenedor = document.getElementById('rotulos');
   const etiquetas = IGLESIAS.map((nombre, i) => {
     const el = document.createElement('div');
     el.className = 'rotulo iglesia candelero';
     el.textContent = nombre;
     contenedor.appendChild(el);
-    // Los candeleros se numeran de derecha a izquierda vistos desde la boca; Éfeso queda a la izquierda.
+    // Los candeleros se numeran de derecha a izquierda vistos desde la boca; Efeso queda a la izquierda.
     // Alturas alternadas para que los nombres no se monten en pantallas angostas.
     return { el, punto: candeleros.posiciones[6 - i].clone().setY(i % 2 ? 2.85 : 2.3), visible: false };
   });

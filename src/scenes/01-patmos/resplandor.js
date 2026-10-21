@@ -34,3 +34,28 @@ export function crearResplandor(color, tamano) {
   s.scale.setScalar(tamano);
   return s;
 }
+
+// Rayos de luz detrás de la figura (dibujados una vez en un lienzo).
+export function texturaRayos() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 512;
+  const g = c.getContext('2d');
+  g.translate(256, 256);
+  for (let i = 0; i < 90; i++) {
+    const a = (i / 90) * Math.PI * 2 + Math.random() * 0.05;
+    const largo = 140 + Math.random() * 116;
+    const ancho = 0.008 + Math.random() * 0.02;
+    const grad = g.createLinearGradient(0, 0, Math.cos(a) * largo, Math.sin(a) * largo);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad;
+    g.beginPath();
+    g.moveTo(0, 0);
+    g.arc(0, 0, largo, a - ancho, a + ancho);
+    g.closePath();
+    g.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
