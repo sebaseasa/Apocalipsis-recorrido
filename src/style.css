@@ -1,3 +1,7 @@
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -8,6 +12,9 @@ body {
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #fff8e7;
 }
 
 #app,
@@ -19,30 +26,205 @@ body {
   display: block;
 }
 
+/* Viñeta: oscurece suavemente los bordes */
+#vineta {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+#fundido {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: #000;
+  opacity: 1;
+}
+
+/* Pie: aviso + subtítulos, siempre abajo */
+.pie {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(5vh, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8em;
+  pointer-events: none;
+}
+
 /* Subtítulos: grandes y legibles para personas mayores */
 .subtitulo {
-  position: fixed;
-  left: 50%;
-  bottom: max(6vh, env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  width: min(90vw, 900px);
+  width: min(92vw, 1000px);
   box-sizing: border-box;
   padding: 0.6em 0.9em;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.6);
-  color: #fff8e7;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(22px, 5.5vmin, 46px);
+  font-size: clamp(22px, 5.2vmin, 44px);
   line-height: 1.35;
   text-align: center;
   text-shadow: 0 2px 6px #000;
-  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.subtitulo.visible {
+  opacity: 1;
 }
 
 .subtitulo .cita {
   display: block;
-  font-size: 0.7em;
+  font-size: 0.65em;
   letter-spacing: 0.05em;
   color: #f2c46d;
   margin-bottom: 0.3em;
+}
+
+.aviso {
+  font-family: system-ui, sans-serif;
+  font-size: clamp(15px, 3vmin, 22px);
+  padding: 0.35em 1em;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 248, 231, 0.85);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.aviso.visible {
+  opacity: 1;
+  animation: respirar 2.4s ease-in-out 1s infinite;
+}
+
+@keyframes respirar {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.paso,
+.fps {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.paso {
+  left: 14px;
+}
+
+.fps {
+  right: 14px;
+}
+
+/* Pantalla de inicio */
+.inicio,
+.cierre {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.inicio {
+  background: radial-gradient(ellipse at 50% 60%, #2a1a0c 0%, #000 70%);
+}
+
+.inicio h1 {
+  margin: 0;
+  font-weight: normal;
+  font-size: clamp(42px, 11vmin, 96px);
+  letter-spacing: 0.08em;
+  color: #f2c46d;
+}
+
+.inicio .escena {
+  margin: 0.4em 0 0;
+  font-size: clamp(22px, 5vmin, 36px);
+}
+
+.inicio .cita {
+  margin: 0.2em 0 1.6em;
+  font-size: clamp(16px, 3.5vmin, 24px);
+  opacity: 0.7;
+}
+
+.nota {
+  margin-top: 1.2em;
+  font-family: system-ui, sans-serif;
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+button {
+  font: inherit;
+  font-size: clamp(22px, 5vmin, 32px);
+  padding: 0.5em 2em;
+  border-radius: 999px;
+  border: 2px solid #f2c46d;
+  background: rgba(242, 196, 109, 0.15);
+  color: #fff8e7;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+.inicio.salida {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+
+/* Cierre */
+.cierre {
+  color: #3a2a14;
+  opacity: 0;
+  transition: opacity 2s ease;
+  gap: 1.2em;
+}
+
+.cierre.visible {
+  opacity: 1;
+}
+
+.grabado {
+  margin: 0;
+}
+
+.marco {
+  width: min(70vw, 52vh);
+  aspect-ratio: 5 / 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  box-sizing: border-box;
+  border: 3px double #8a6a3a;
+  font-size: clamp(16px, 3.4vmin, 24px);
+  line-height: 1.4;
+  background: rgba(138, 106, 58, 0.08);
+}
+
+.pregunta {
+  margin: 0;
+  max-width: 900px;
+  font-size: clamp(24px, 5.6vmin, 46px);
+  line-height: 1.3;
+}
+
+.cierre button {
+  color: #3a2a14;
+  border-color: #8a6a3a;
 }

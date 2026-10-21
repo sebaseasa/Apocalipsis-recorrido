@@ -9,7 +9,35 @@
   </head>
   <body>
     <div id="app"></div>
-    <div id="subtitulo" class="subtitulo" aria-live="polite"></div>
+    <div id="vineta"></div>
+    <div id="fundido"></div>
+
+    <div id="paso" class="paso"></div>
+    <div id="fps" class="fps" hidden></div>
+
+    <div class="pie">
+      <div id="aviso" class="aviso">Toca para continuar</div>
+      <div id="subtitulo" class="subtitulo" aria-live="polite"></div>
+    </div>
+
+    <section id="inicio" class="inicio">
+      <h1>Apocalipsis</h1>
+      <p class="escena">Escena 1 · Patmos</p>
+      <p class="cita">Apocalipsis 1:9-18</p>
+      <button id="entrar" type="button" disabled>Cargando…</button>
+      <p class="nota">Sube el volumen 🔊</p>
+    </section>
+
+    <section id="cierre" class="cierre" hidden>
+      <figure class="grabado">
+        <div class="marco">
+          <p>Aquí irá el grabado de Alberto Durero (1498):<br /><em>La visión de los siete candeleros</em></p>
+        </div>
+      </figure>
+      <p class="pregunta">¿Qué te dice que Jesús camine en medio de su iglesia?</p>
+      <button id="otra-vez" type="button">Volver a empezar</button>
+    </section>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

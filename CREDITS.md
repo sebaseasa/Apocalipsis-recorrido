@@ -6,5 +6,8 @@ Registro de cada asset usado en el proyecto (origen, autor y licencia).
 |-------|------|--------|-------|----------|
 | — | — | — | — | — |
 
-- Texto bíblico: Reina-Valera 1909 (dominio público).
+Por ahora (paso 2) no hay archivos externos: las formas, el cielo, el mar y los
+sonidos de prueba se generan por código dentro del proyecto.
+
+- Texto bíblico: Reina-Valera 1909 (dominio público), en `public/text/apocalipsis-1.json`.
 - three.js: licencia MIT.
