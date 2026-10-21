@@ -28,12 +28,12 @@ const cieloFragment = /* glsl */ `
     vec3 d = normalize(vDir);
     float y = d.y;
     // De día en el cielo: azul profundo arriba y una claridad dorada hacia el trono.
-    vec3 cenit = vec3(0.025, 0.05, 0.14);
-    vec3 horizonte = vec3(0.5, 0.38, 0.24);
+    vec3 cenit = vec3(0.012, 0.025, 0.08);
+    vec3 horizonte = vec3(0.16, 0.13, 0.15);
     vec3 dia = mix(horizonte, cenit, pow(clamp(y, 0.0, 1.0), 0.55));
-    dia = mix(dia, vec3(0.55, 0.48, 0.38), clamp(-y * 4.0, 0.0, 1.0));
+    dia = mix(dia, vec3(0.14, 0.12, 0.12), clamp(-y * 4.0, 0.0, 1.0));
     float hacia = max(dot(d, normalize(vec3(0.0, 0.12, -1.0))), 0.0);
-    dia += vec3(1.0, 0.85, 0.6) * pow(hacia, 8.0) * 0.35;
+    dia += vec3(1.0, 0.8, 0.5) * pow(hacia, 24.0) * 0.25;
     // De noche (4:1): oscuro y con estrellas.
     vec3 noche = mix(vec3(0.004, 0.006, 0.016), vec3(0.012, 0.018, 0.045), clamp(y, 0.0, 1.0));
     vec3 c = floor(d * 280.0);
@@ -72,10 +72,10 @@ const nubesFragment = /* glsl */ `
   void main() {
     vec2 p = vMundo.xz * 0.07 + vec2(uTiempo * 0.006, uTiempo * 0.004);
     float k = fbm(p + fbm(p * 0.7) * 0.8);
-    vec3 dia = mix(vec3(0.36, 0.31, 0.25), vec3(0.62, 0.56, 0.47), k);
+    vec3 dia = mix(vec3(0.1, 0.09, 0.1), vec3(0.3, 0.27, 0.26), k);
     // Más luz cerca del trono.
     float cerca = 1.0 - smoothstep(4.0, 40.0, distance(vMundo.xz, vec2(0.0, -12.0)));
-    dia *= 0.7 + 0.5 * cerca;
+    dia *= 0.6 + 0.9 * cerca;
     vec3 noche = mix(vec3(0.01, 0.012, 0.025), vec3(0.04, 0.045, 0.07), k);
     vec3 color = mix(dia, noche, uNoche) + uDestello * vec3(0.3, 0.32, 0.4);
     float lejos = 1.0 - smoothstep(60.0, 110.0, length(vMundo.xz));
@@ -174,7 +174,7 @@ function texturaRelampago() {
 export function crearCielo() {
   const escena = new THREE.Scene();
   escena.background = new THREE.Color(0x000000);
-  escena.fog = new THREE.FogExp2(0x6a5a46, 0.006);
+  escena.fog = new THREE.FogExp2(0x1e1a1e, 0.006);
   const estado = {
     noche: 1, puerta: 0, trono: 0, sentado: 0, arco: 0, mar: 0, destello: 0,
     lamparas: [0, 0, 0, 0, 0, 0, 0],
@@ -306,7 +306,7 @@ export function crearCielo() {
 
   // --- El mar de vidrio, semejante al cristal (4:6), delante del trono ---
   const vidrio = new THREE.MeshStandardMaterial({
-    color: 0xb8d2ee, metalness: 1, roughness: 0.04, transparent: true, opacity: 0,
+    color: 0x6d8fb4, metalness: 0.3, roughness: 0.12, transparent: true, opacity: 0,
   });
   const mar = new THREE.Mesh(new THREE.CircleGeometry(7, 96).rotateX(-Math.PI / 2), vidrio);
   mar.position.set(TRONO.x, 0.01, TRONO.z + 10.5);
@@ -358,9 +358,9 @@ export function crearCielo() {
     pmrem.dispose();
     escena.traverse((o) => {
       const m = o.material;
-      if (m?.metalness > 0.5) {
+      if (m?.metalness > 0.5 || m === vidrio) {
         m.envMap = env;
-        m.envMapIntensity = m === vidrio ? 0.35 : 0.5;
+        m.envMapIntensity = 0.5;
         m.needsUpdate = true;
       }
     });
@@ -381,7 +381,7 @@ export function crearCielo() {
       r.s.visible = r.vida > 0;
     }
     const luz = 1 - noche;
-    ambiente.intensity = 0.3 * luz + estado.destello * 1.5;
+    ambiente.intensity = 0.35 * luz + estado.destello * 1.5;
     frente.intensity = 1.2 * luz;
     escena.fog.density = 0.006 * luz;
 
@@ -421,7 +421,7 @@ export function crearCielo() {
     luzLamparas.intensity = fuego * 1.2;
 
     // Mar de vidrio.
-    vidrio.opacity = estado.mar * 0.7;
+    vidrio.opacity = estado.mar * 0.6;
     mar.visible = estado.mar > 0.001;
     reflejo.material.opacity = estado.mar * s * 0.12;
 

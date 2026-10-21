@@ -250,7 +250,10 @@ document.addEventListener('visibilitychange', () => {
 
 // ?velocidad=4 acelera el recorrido (solo para pruebas).
 let velocidad = Number(new URLSearchParams(location.search).get('velocidad')) || 1;
-if (velocidad !== 1) window.ajustarVelocidad = (v) => (velocidad = v);
+if (velocidad !== 1) {
+  window.ajustarVelocidad = (v) => (velocidad = v);
+  window.pruebaBrillo = (v) => (usarBrillo = v);
+}
 const ojoAnterior = new THREE.Vector3();
 const reloj = new THREE.Clock();
 let t = 0;
@@ -286,10 +289,6 @@ renderer.setAnimationLoop(() => {
   const escena = enTierra ? mundo.tierra.escena : enCielo ? mundo.cielo.escena : mundo.escena;
   const camara = enTierra ? mundo.tierra.camara : cam.camara;
   if (enCielo) mundo.cielo.actualizar(t, dt * velocidad);
-  // En el cielo hay mucha claridad: el brillo solo toca las luces, no las esculturas.
-  brillo.strength = enCielo ? 0.3 : 0.75;
-  brillo.radius = enCielo ? 0.15 : 0.6;
-  brillo.threshold = enCielo ? 0.97 : 0.82;
   if (enTierra) {
     mundo.tierra.actualizar(t);
     mundo.tierra.actualizarRotulos();
@@ -297,6 +296,7 @@ renderer.setAnimationLoop(() => {
   if (mundo.vista === 'cueva') mundo.actualizarEtiquetas(cam.camara);
   pasoEscena.scene = escena;
   pasoEscena.camera = camara;
-  if (usarBrillo) composer.render();
+  // En el cielo no se usa el brillo general: lo velaba todo de blanco (las luces ya brillan solas).
+  if (usarBrillo && !enCielo) composer.render();
   else renderer.render(escena, camara);
 });
