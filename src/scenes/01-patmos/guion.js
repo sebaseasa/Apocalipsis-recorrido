@@ -169,6 +169,8 @@ export async function recorrido(mundo, cam) {
   // "su rostro era como el sol cuando resplandece en su fuerza": retrocedemos ante la luz.
   audio.nivel('musica', 1, 4);
   await juntos(leer('1:16', 1), acercarA(-12, 4), mirarA('centro', 3), animar(4, (p) => (e.sol = p)));
+  // Después del resplandor, la luz baja para que se vea su rostro.
+  animar(3, (p) => (e.sol = mezclar(1, 0.25, p)));
   await esperarToque();
 
   // 6. "No temas": Juan cae como muerto, silencio, y Él pone su diestra sobre él (1:17-18).
@@ -182,8 +184,9 @@ export async function recorrido(mundo, cam) {
     const z0 = g.posicion.z;
     const focoDesde = g.foco.clone();
     const focoHasta = figura.punto('pies');
+    const sol0 = e.sol;
     animar(1.5, (p) => {
-      e.sol = mezclar(1, 0.3, p);
+      e.sol = mezclar(sol0, 0.15, p);
       e.espada = 1 - p; // la espada se retira; ya no se dibuja vista desde el suelo
     });
     // Caída rápida hasta el suelo, con la cabeza ladeada, mirando sus pies.
@@ -242,7 +245,7 @@ export async function recorrido(mundo, cam) {
 
   // "el que vivo, y he sido muerto; y he aquí que vivo por siglos de siglos"
   audio.nivel('musica', 0.9, 4);
-  await juntos(leer('1:18', 0, 1), animar(5, (p) => (e.sol = mezclar(0.3, 1, p))), animar(3, (p) => (e.mano = 1 - p)));
+  await juntos(leer('1:18', 0, 1), animar(5, (p) => (e.sol = mezclar(0.15, 0.45, p))), animar(3, (p) => (e.mano = 1 - p)));
 
   // "Y tengo las llaves del infierno y de la muerte."
   await juntos(leer('1:18', 1, 1), (async () => {
@@ -259,7 +262,7 @@ export async function recorrido(mundo, cam) {
   ocultarSubtitulo();
   audio.nivel('musica', 1, 5);
   tocarCalidez(0, 3);
-  animar(5, (p) => (e.sol = 1 + p * 2.5));
+  animar(5, (p) => (e.sol = 0.45 + p * 3));
   await fundido('blanco', 1, 5);
   audio.nivel('ambiente', 0, 6);
   mostrarCierre();

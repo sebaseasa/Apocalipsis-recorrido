@@ -48,7 +48,7 @@ CREDITS.md           licencia y origen de cada asset
 2. **La cueva.** Fade in. Estamos dentro de una cueva de roca, en penumbra. Al fondo, la boca de la cueva deja ver el mar al atardecer. La cámara avanza lentamente hacia la luz.
 3. **La voz.** Al llegar a la entrada, un sonido grave y potente como de trompeta (1:10). La cámara se gira despacio hacia atrás.
 4. **Los candeleros.** Detrás, donde antes había oscuridad, se encienden uno por uno siete candeleros de oro, formando un semicírculo. Cada llama ilumina la roca.
-5. **El Hijo del hombre.** En medio, una figura luminosa. **No mostrar rostro detallado:** solo una silueta envuelta en luz blanca intensa, con vestidura larga y cinto de oro, rodeada de resplandor. Siete estrellas brillan sobre su mano derecha.
+5. **El Hijo del hombre.** En medio, una figura realista, como en el grabado de Durero: se ven su rostro, cabello y barba, con vestidura larga y cinto de oro, rodeada de resplandor (decisión de Sebastián, cambió la regla anterior de "solo silueta de luz"). Su rostro solo se vuelve luz intensa en 1:16 ("como el sol") y luego baja para verlo cara a cara. Siete estrellas brillan sobre su mano derecha.
 6. **"No temas".** La cámara baja como si el visitante cayera de rodillas (1:17). Pausa en silencio. Luego se lee: "No temas: yo soy el primero y el último; y el que vivo, y he sido muerto; y he aquí que vivo por siglos de siglos" (1:17-18).
 7. **Cierre.** La luz llena la pantalla. Aparece el grabado de Durero de los siete candeleros y la pregunta para la célula: "¿Qué te dice que Jesús camine en medio de su iglesia?"
 

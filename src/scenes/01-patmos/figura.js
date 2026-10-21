@@ -61,7 +61,7 @@ export function crearFigura(posicion) {
     uPies: { value: 0 },
   };
   const tela = new THREE.MeshStandardMaterial({
-    color: 0xf6f1e8, roughness: 0.55, metalness: 0, emissive: 0xfff3df, emissiveIntensity: 0.12, transparent: true, opacity: 0,
+    color: 0xf6f1e8, roughness: 0.55, metalness: 0, emissive: 0xfff3df, emissiveIntensity: 0.07, transparent: true, opacity: 0,
   });
   tela.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, extra);
@@ -77,8 +77,9 @@ export function crearFigura(posicion) {
         float borde = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewPosition))), 2.5);
         totalEmissiveRadiance += vec3(1.0, 0.96, 0.88) * borde * uBorde;
         // Cabeza y cabellos blancos como la nieve (1:14).
-        float cabeza = smoothstep(1.62, 1.75, vLocal.y);
-        totalEmissiveRadiance += vec3(1.0) * cabeza * uCabello * 1.4;
+        // (el rostro, al frente, se ilumina menos para que se siga viendo)
+        float cabeza = smoothstep(1.56, 1.69, vLocal.y) * (1.0 - 0.8 * smoothstep(0.0, 0.07, vLocal.z));
+        totalEmissiveRadiance += vec3(1.0) * cabeza * uCabello * 1.2;
         // Pies ardientes como en un horno (1:15).
         float pie = 1.0 - smoothstep(0.0, 0.16, vLocal.y);
         totalEmissiveRadiance += vec3(1.0, 0.42, 0.08) * pie * uPies * 2.5;`
@@ -105,19 +106,19 @@ export function crearFigura(posicion) {
   const cinto = new THREE.Mesh(new THREE.TorusGeometry(1, 0.12, 10, 48), oro);
   cinto.rotation.x = Math.PI / 2;
   cinto.scale.set(0.24, 0.17, 0.2); // ancho, fondo, grosor
-  cinto.position.set(-0.01, 1.36, -0.03);
+  cinto.position.set(-0.01, 1.33, -0.03);
 
   // Resplandor del rostro: "como el sol" (sin mostrar facciones).
   const brilloCabello = crearResplandor(0xffffff, 0.8);
-  brilloCabello.position.set(-0.02, 1.86, -0.05);
+  brilloCabello.position.set(-0.02, 1.8, -0.14); // detrás de la cabeza
 
   // Ojos como llama de fuego: dos destellos pequeños.
-  const ojos = [-0.055, 0.02].map((x) => {
+  const ojos = [-0.05, 0.01].map((x) => {
     const o = new THREE.Sprite(
       new THREE.SpriteMaterial({ map: texturaResplandor(), color: 0xff5a10, transparent: true, opacity: 0, depthWrite: false })
     );
-    o.position.set(x, 1.82, 0.11);
-    o.scale.setScalar(0.05);
+    o.position.set(x, 1.81, 0.105);
+    o.scale.setScalar(0.025);
     return o;
   });
 
@@ -144,12 +145,12 @@ export function crearFigura(posicion) {
 
   // Siete estrellas sobre la mano derecha (a la izquierda de quien mira).
   const estrellas = new THREE.Group();
-  estrellas.position.set(-0.42, 1.2, 0.22);
+  estrellas.position.set(-0.42, 1.13, 0.22);
   for (let i = 0; i < 7; i++) estrellas.add(crearResplandor(0xd8e6ff, 0.13));
 
   // Llaves de oro en la mano izquierda (1:18).
   const llaves = new THREE.Group();
-  llaves.position.set(0.43, 0.98, 0.3);
+  llaves.position.set(0.43, 0.93, 0.3);
   for (const [dx, giro] of [[-0.03, 0.3], [0.03, -0.3]]) {
     const llave = new THREE.Group();
     const anillo = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.01, 6, 16), oro);
@@ -174,7 +175,7 @@ export function crearFigura(posicion) {
   hoja.rotation.x = Math.PI / 2; // la punta mira al frente
   hoja.position.z = 0.4;
   const espada = new THREE.Group();
-  espada.position.set(-0.02, 1.77, 0.09);
+  espada.position.set(-0.02, 1.72, 0.09);
   // Un poco hacia abajo y de lado, para que se distinga (como en el grabado de Durero).
   espada.rotation.set(0.15, 0.7, 0);
   espada.add(hoja);
@@ -192,7 +193,7 @@ export function crearFigura(posicion) {
   aura.position.y = 1.2;
   aura.scale.set(4, 5.5, 1);
   const halo = crearResplandor(0xffffff, 1);
-  halo.position.set(-0.02, 1.84, 0.12);
+  halo.position.set(-0.02, 1.79, 0.05);
   const rayos = new THREE.Sprite(
     new THREE.SpriteMaterial({
       map: texturaRayos(), color: 0xfff0d0, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
@@ -214,18 +215,18 @@ export function crearFigura(posicion) {
     grupo.visible = p > 0;
 
     tela.opacity = p;
-    tela.emissiveIntensity = 0.12 + e.sol * 0.45;
-    extra.uBorde.value = 0.55 + e.sol * 0.8;
+    tela.emissiveIntensity = 0.07 + e.sol * 0.45;
+    extra.uBorde.value = 0.45 + e.sol * 0.8;
     extra.uCabello.value = e.cabello;
     oro.opacity = p;
     oro.emissiveIntensity = 0.15 * p + e.cinto * 1.2;
     luzFrente.intensity = p * 9;
-    brilloCabello.material.opacity = e.cabello * 0.5;
+    brilloCabello.material.opacity = e.cabello * 0.35;
 
     const llama = 0.85 + Math.sin(t * 11) * 0.1 + Math.sin(t * 27) * 0.05;
     for (const o of ojos) {
       o.material.opacity = e.ojos * llama;
-      o.scale.setScalar(0.06 + e.ojos * 0.03 * llama);
+      o.scale.setScalar(0.022 + e.ojos * 0.01 * llama);
     }
 
     const fuego = e.pies * (0.9 + Math.sin(t * 7) * 0.1);
@@ -238,8 +239,9 @@ export function crearFigura(posicion) {
     // Halo: tenue mientras se describen los detalles, fuerte cuando "resplandece".
     const pulso = 1 + Math.sin(t * 1.3) * 0.04;
     aura.material.opacity = (p * 0.3 + e.sol * 0.45) * pulso;
-    halo.material.opacity = p * 0.5 + e.sol * 0.5;
-    halo.scale.setScalar(0.5 + e.sol * 2.2);
+    // Halo del rostro: casi nada de base (para ver su rostro); fuerte solo cuando "resplandece".
+    halo.material.opacity = p * 0.08 + e.sol * 0.55;
+    halo.scale.setScalar(0.4 + e.sol * 2.2);
     rayos.material.opacity = (p * 0.18 + e.sol * 0.35) * pulso;
     rayos.material.rotation = t * 0.03;
     luz.intensity = p * 2 + e.sol * 2;
@@ -270,9 +272,9 @@ export function crearFigura(posicion) {
     grupo.updateMatrixWorld(true);
     const v = new THREE.Vector3();
     switch (nombre) {
-      case 'cabeza': v.set(0, 1.84, 0); break;
-      case 'pecho': v.set(0, 1.4, 0); break;
-      case 'centro': v.set(0, 1.15, 0); break;
+      case 'cabeza': v.set(0, 1.79, 0); break;
+      case 'pecho': v.set(0, 1.34, 0); break;
+      case 'centro': v.set(0, 1.1, 0); break;
       case 'pies': v.set(0, 0.08, 0.15); break;
       case 'estrellas': estrellas.getWorldPosition(v); return v;
       case 'llaves': llaves.getWorldPosition(v); return v;
