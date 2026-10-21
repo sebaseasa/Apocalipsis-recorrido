@@ -7,6 +7,8 @@ export function crearControles(elemento, { alTocar, alArrastrar }) {
   let ultimo = null;
 
   elemento.addEventListener('pointerdown', (e) => {
+    // Los botones y la palanca tienen su propio manejo.
+    if (e.target.closest('button, .palanca')) return;
     inicio = { x: e.clientX, y: e.clientY, t: performance.now() };
     ultimo = { x: e.clientX, y: e.clientY };
   });
@@ -67,4 +69,46 @@ export function avanzarRapido() {
 export function cancelarToque() {
   pendiente = null;
   aviso.classList.remove('visible');
+}
+
+// Palanca en pantalla: devuelve x e y entre -1 y 1 mientras se arrastra la perilla.
+export function crearPalanca(elemento, alMover) {
+  const perilla = elemento.querySelector('.perilla');
+  let activo = null;
+  const mover = (e) => {
+    const r = elemento.getBoundingClientRect();
+    const radio = r.width / 2;
+    let x = (e.clientX - (r.left + radio)) / radio;
+    let y = (e.clientY - (r.top + radio)) / radio;
+    const largo = Math.hypot(x, y);
+    if (largo > 1) {
+      x /= largo;
+      y /= largo;
+    }
+    perilla.style.transform = `translate(${x * radio * 0.6}px, ${y * radio * 0.6}px)`;
+    alMover(x, y);
+  };
+  elemento.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    activo = e.pointerId;
+    elemento.setPointerCapture(e.pointerId);
+    mover(e);
+  });
+  elemento.addEventListener('pointermove', (e) => {
+    if (e.pointerId === activo) mover(e);
+  });
+  const soltar = (e) => {
+    if (e.pointerId !== activo) return;
+    activo = null;
+    perilla.style.transform = '';
+    alMover(0, 0);
+  };
+  elemento.addEventListener('pointerup', soltar);
+  elemento.addEventListener('pointercancel', soltar);
+}
+
+// Aviso fijo mientras está en pausa.
+export function avisoPausa(activo) {
+  aviso.textContent = activo ? 'En pausa' : 'Toca para continuar';
+  aviso.classList.toggle('visible', activo || pendiente !== null);
 }

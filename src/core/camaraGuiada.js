@@ -22,6 +22,10 @@ export function crearCamaraGuiada() {
   const hacia = new THREE.Vector3();
 
   const desvio = { giro: 0, inclinacion: 0, arrastrando: false };
+  // Modo caminar (opcional): Juan se mueve con la palanca; el guion sigue igual.
+  const libre = { activo: false, x: 0, y: 0, desplazamiento: new THREE.Vector3() };
+  const adelante = new THREE.Vector3();
+  const derecha = new THREE.Vector3();
   let sensibilidad = 0.004;
 
   function arrastrar(dx, dy, activo) {
@@ -33,12 +37,26 @@ export function crearCamaraGuiada() {
 
   function actualizar(t, dt) {
     // Al soltar, la mirada vuelve despacio al encuadre del guion.
-    if (!desvio.arrastrando) {
+    if (!desvio.arrastrando && !libre.activo) {
       const k = 1 - Math.exp(-dt * 0.8);
       desvio.giro -= desvio.giro * k;
       desvio.inclinacion -= desvio.inclinacion * k;
     }
-    camara.position.copy(guia.posicion);
+    // Caminar: avanzar hacia donde se mira (palanca hacia arriba) o de lado.
+    const d = libre.desplazamiento;
+    if (libre.activo) {
+      const rumbo = guia.giro + desvio.giro;
+      adelante.set(-Math.sin(rumbo), 0, -Math.cos(rumbo));
+      derecha.set(Math.cos(rumbo), 0, -Math.sin(rumbo));
+      d.addScaledVector(adelante, -libre.y * 1.4 * dt).addScaledVector(derecha, libre.x * 1.4 * dt);
+    } else {
+      d.multiplyScalar(1 - Math.min(1, dt * 0.8)); // al apagarlo, vuelve despacio al camino
+    }
+    camara.position.copy(guia.posicion).add(d);
+    // Dentro de la cueva (no atravesar las paredes ni salir al precipicio).
+    camara.position.x = THREE.MathUtils.clamp(camara.position.x, -3.3, 3.3);
+    camara.position.z = THREE.MathUtils.clamp(camara.position.z, -18.5, 4.5);
+    d.subVectors(camara.position, guia.posicion).setY(0);
     if (guia.deriva > 0) {
       camara.position.x += Math.sin(t * 0.11) * 0.55 * guia.deriva;
       camara.position.y += Math.sin(t * 0.17) * 0.06 * guia.deriva;
@@ -76,5 +94,16 @@ export function crearCamaraGuiada() {
     sensibilidad = 2.4 / Math.max(window.innerWidth, 1);
   }
 
-  return { camara, guia, arrastrar, actualizar, ajustarAspecto };
+  // Palanca: x e y entre -1 y 1 (y negativo = adelante, como en pantalla).
+  function palanca(x, y) {
+    libre.x = x;
+    libre.y = y;
+  }
+
+  function caminar(activo) {
+    libre.activo = activo;
+    if (!activo) palanca(0, 0);
+  }
+
+  return { camara, guia, arrastrar, actualizar, ajustarAspecto, palanca, caminar };
 }

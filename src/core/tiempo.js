@@ -4,11 +4,13 @@
 const activas = [];
 let ahora = 0;
 let ritmo = 1; // 1 = normal; más alto = avanzar rápido
+let pausado = false;
 
 export const suave = (t) => t * t * (3 - 2 * t);
 export const lineal = (t) => t;
 
 export function actualizarTiempo(dt) {
+  if (pausado) return;
   ahora += dt * ritmo;
   for (let i = activas.length - 1; i >= 0; i--) {
     const a = activas[i];
@@ -43,8 +45,16 @@ export function ritmoNormal() {
 
 export const acelerado = () => ritmo > 1;
 
+// Pausa: el guion (textos, movimientos y esperas) se detiene donde está.
+export function pausar(valor) {
+  pausado = valor;
+}
+
+export const estaPausado = () => pausado;
+
 // Corta todo lo pendiente (para volver a empezar). Las promesas viejas no continúan.
 export function cancelarTodo() {
   activas.length = 0;
   ritmo = 1;
+  pausado = false;
 }

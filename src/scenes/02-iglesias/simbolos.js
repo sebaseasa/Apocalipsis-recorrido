@@ -40,7 +40,7 @@ function crearArbol() {
   }
   rama(new THREE.Vector3(), new THREE.Vector3(0, 1, 0), 1.2, 0.14, 3);
   const hojasSprites = hojas.map((p) => {
-    const s = crearResplandor(azar() > 0.4 ? 0x9fe08a : 0xfff0a0, 0.4 + azar() * 0.4);
+    const s = crearResplandor(azar() > 0.35 ? 0x7fc070 : 0xf0e090, 0.28 + azar() * 0.3);
     s.position.copy(p);
     grupo.add(s);
     return s;
@@ -54,7 +54,7 @@ function crearArbol() {
       grupo.visible = n > 0;
       grupo.scale.setScalar(1.5 * (0.5 + 0.5 * n));
       madera.opacity = n;
-      hojasSprites.forEach((s, i) => (s.material.opacity = n * (0.4 + 0.15 * Math.sin(t * 1.5 + i))));
+      hojasSprites.forEach((s, i) => (s.material.opacity = n * (0.2 + 0.08 * Math.sin(t * 1.5 + i))));
       luz.intensity = n * 4;
     },
   };

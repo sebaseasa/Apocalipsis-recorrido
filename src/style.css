@@ -368,21 +368,61 @@ button:disabled {
   padding-top: max(8vh, 24px);
 }
 
-/* Botón para volver al menú durante el recorrido */
-.boton-menu {
+/* Botones durante el recorrido: pausa, caminar y menú */
+.barra {
   position: fixed;
   top: max(8px, env(safe-area-inset-top));
-  right: 10px;
-  font-size: 15px;
-  padding: 0.35em 0.9em;
-  border-width: 1px;
-  background: rgba(0, 0, 0, 0.35);
-  opacity: 0.75;
+  right: 8px;
+  display: flex;
+  gap: 6px;
   z-index: 5;
 }
 
+.barra button {
+  font-size: clamp(14px, 3.2vmin, 18px);
+  padding: 0.4em 0.8em;
+  border-width: 1px;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0.8;
+}
+
+.barra button.activo {
+  background: rgba(242, 196, 109, 0.35);
+  opacity: 1;
+}
+
+/* Palanca para caminar: se arrastra la perilla hacia donde se quiere ir */
+.palanca {
+  position: fixed;
+  left: 18px;
+  bottom: 34vh;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 2px solid rgba(242, 196, 109, 0.7);
+  background: rgba(0, 0, 0, 0.3);
+  touch-action: none;
+  z-index: 5;
+}
+
+.palanca .perilla {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  background: rgba(242, 196, 109, 0.75);
+  pointer-events: none;
+}
+
+.paso {
+  max-width: 45vw;
+}
+
 .fps {
-  top: 52px;
+  top: 56px;
 }
 
 /* Para reflexionar (al final de cada carta) */

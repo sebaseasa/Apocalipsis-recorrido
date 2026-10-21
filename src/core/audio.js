@@ -352,3 +352,10 @@ export function llamar() {
     golpe.stop(t + 0.1);
   });
 }
+
+// Pausa todo el sonido (y lo reanuda) sin perder el punto donde iba.
+export function pausarAudio(valor) {
+  if (!ctx) return;
+  if (valor) ctx.suspend();
+  else ctx.resume();
+}

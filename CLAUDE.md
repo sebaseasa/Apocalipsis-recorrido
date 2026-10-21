@@ -10,7 +10,7 @@ El tono es reverente, cinematográfico y esperanzador. Nada de terror ni gore: l
 ## Plataforma y restricciones (no negociables)
 - Dispositivo principal de desarrollo y prueba: **Samsung Galaxy Z Fold 5** en Chrome para Android. Debe verse bien doblado (pantalla angosta, vertical) y desdoblado (casi cuadrado).
 - También debe funcionar en una laptop conectada a una TV.
-- Controles táctiles: el recorrido es **guiado** (la cámara avanza sola por un camino), el usuario solo toca para continuar a la siguiente escena y puede arrastrar para mirar alrededor. Nada de joysticks complicados.
+- Controles táctiles: el recorrido es **guiado** (la cámara avanza sola por un camino), el usuario solo toca para continuar y puede arrastrar para mirar alrededor. Botón de pausa. Modo **opcional** "Caminar" (pedido por Sebastián) con una palanca simple en pantalla para moverse siendo Juan; el modo guiado sigue siendo el principal. Jesús vuelve el rostro hacia Juan cuando este se mueve.
 - Rendimiento: 30 fps estables en el Fold 5. Peso total por escena menor a 25 MB. Texturas en 1K o 2K comprimidas (KTX2/Basis o WebP), modelos en glTF/GLB con Draco.
 - Debe publicarse como sitio estático en **GitHub Pages**, abriéndose con un enlace.
 

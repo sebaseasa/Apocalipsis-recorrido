@@ -262,6 +262,21 @@ export function crearFigura(posicion) {
     brilloLlaves.material.opacity = e.llaves * 0.7;
   }
 
+  // Jesús vuelve el rostro hacia Juan cuando este se mueve.
+  // (Mientras las estrellas vuelan a los candeleros se queda quieto, para que lleguen a su lugar.)
+  function mirarHacia(pos, dt) {
+    if (estado.vuelo.some((v) => v > 0)) return;
+    const dx = pos.x - grupo.position.x;
+    const dz = pos.z - grupo.position.z;
+    if (dx * dx + dz * dz < 0.25) return;
+    // Su frente mira a +z local: con rotation.y = atan2(dx, dz) queda de cara al punto.
+    let objetivo = Math.atan2(dx, dz);
+    let actual = grupo.rotation.y;
+    while (objetivo - actual > Math.PI) objetivo -= Math.PI * 2;
+    while (objetivo - actual < -Math.PI) objetivo += Math.PI * 2;
+    grupo.rotation.y = actual + (objetivo - actual) * Math.min(1, dt * 1.2);
+  }
+
   // Destinos de las estrellas (en el espacio del grupo de estrellas), a partir de puntos del mundo.
   const destinos = [];
   function apuntarEstrellas(puntosMundo) {
@@ -275,6 +290,7 @@ export function crearFigura(posicion) {
     destinos.length = 0;
     cuerpo.rotation.x = 0;
     grupo.position.copy(posicion);
+    grupo.rotation.y = Math.PI;
   }
 
   // Puntos del cuerpo (en coordenadas del mundo) para dirigir la mirada de la cámara.
@@ -292,5 +308,5 @@ export function crearFigura(posicion) {
     return grupo.localToWorld(v);
   }
 
-  return { grupo, estado, actualizar, reiniciar, punto, apuntarEstrellas };
+  return { grupo, estado, actualizar, reiniciar, punto, apuntarEstrellas, mirarHacia };
 }

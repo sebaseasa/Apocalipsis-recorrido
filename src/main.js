@@ -3,13 +3,13 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { actualizarTiempo, cancelarTodo } from './core/tiempo.js';
+import { actualizarTiempo, cancelarTodo, pausar, estaPausado } from './core/tiempo.js';
 import { crearCamaraGuiada } from './core/camaraGuiada.js';
-import { crearControles, toqueRecibido, cancelarToque, avanzarRapido } from './core/controles.js';
+import { crearControles, toqueRecibido, cancelarToque, avanzarRapido, crearPalanca, avisoPausa } from './core/controles.js';
 import { crearDetector } from './core/rendimiento.js';
 import { cargarTexto, ocultarSubtitulo } from './core/subtitulos.js';
 import { ocultarCierre, ocultarReflexion, fundido } from './core/pantalla.js';
-import { iniciarAudio, silencio } from './core/audio.js';
+import { iniciarAudio, silencio, pausarAudio } from './core/audio.js';
 import { todoCargado, alProgreso } from './core/cargador.js';
 import { crearEscena } from './scenes/01-patmos/escena.js';
 import { crearTierra } from './scenes/01-patmos/tierra.js';
@@ -68,12 +68,17 @@ const inicio = document.getElementById('inicio');
 const menu = document.getElementById('menu');
 const carga = document.getElementById('carga');
 const botonMenu = document.getElementById('boton-menu');
+const barra = document.getElementById('barra');
+const botonPausa = document.getElementById('boton-pausa');
+const botonCaminar = document.getElementById('boton-caminar');
+const palanca = document.getElementById('palanca');
 const hayPantallaEncima = () =>
   !inicio.hidden || !document.getElementById('cierre').hidden || !document.getElementById('reflexion').hidden;
 
 crearControles(document.body, {
   // Un toque continúa si hay aviso; si no, adelanta hasta el siguiente texto.
   alTocar: () => {
+    if (estaPausado()) return;
     if (!toqueRecibido() && enMarcha && !hayPantallaEncima()) avanzarRapido();
   },
   alArrastrar: cam.arrastrar,
@@ -108,7 +113,29 @@ Promise.all([cargarTexto(`${base}text/apocalipsis-1.json`), cargarTexto(`${base}
 
 let enMarcha = false;
 
+// Pausa / seguir.
+function fijarPausa(valor) {
+  pausar(valor);
+  pausarAudio(valor);
+  avisoPausa(valor);
+  botonPausa.textContent = valor ? '▶ Seguir' : '⏸ Pausa';
+  botonPausa.classList.toggle('activo', valor);
+}
+botonPausa.addEventListener('click', () => fijarPausa(!estaPausado()));
+
+// Caminar (opcional): aparece la palanca; el recorrido sigue guiado igual.
+let caminando = false;
+function fijarCaminar(valor) {
+  caminando = valor;
+  cam.caminar(valor);
+  palanca.hidden = !valor;
+  botonCaminar.classList.toggle('activo', valor);
+}
+botonCaminar.addEventListener('click', () => fijarCaminar(!caminando));
+crearPalanca(palanca, (x, y) => cam.palanca(x, y));
+
 function limpiar() {
+  if (estaPausado()) fijarPausa(false);
   cancelarTodo();
   cancelarToque();
   ocultarCierre();
@@ -125,7 +152,8 @@ function volverAlMenu() {
   enMarcha = false;
   silencio(true, 1);
   fundido('negro', 1, 0);
-  botonMenu.hidden = true;
+  barra.hidden = true;
+  fijarCaminar(false);
   inicio.classList.remove('salida');
   inicio.hidden = false;
 }
@@ -133,7 +161,7 @@ function volverAlMenu() {
 async function empezar(escena, iglesia) {
   limpiar();
   enMarcha = true;
-  botonMenu.hidden = false;
+  barra.hidden = false;
   if (escena === '1') {
     await recorrido(mundo, cam);
   } else {
@@ -184,6 +212,8 @@ renderer.setAnimationLoop(() => {
   actualizarTiempo(dt * velocidad);
   mundo.actualizar(t);
   mundo.simbolos.actualizar(t);
+  // Jesús vuelve el rostro hacia Juan (sobre todo al caminar).
+  if (mundo.vista === 'cueva') mundo.figura.mirarHacia(cam.camara.position, dt);
   cam.actualizar(t, dt);
   const enTierra = mundo.vista === 'tierra';
   const escena = enTierra ? mundo.tierra.escena : mundo.escena;
