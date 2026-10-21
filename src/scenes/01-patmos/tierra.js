@@ -206,14 +206,57 @@ export function crearTierra() {
   // Vuelo entre dos lugares del mapa: [lat, lon, altura] → [lat, lon, altura], con p de 0 a 1.
   const dA = new THREE.Vector3();
   const dB = new THREE.Vector3();
-  function volar(desde, hasta, p) {
+  function volar(desde, hasta, p, inclinar = 0.5) {
     dA.copy(puntoGeo(desde[0], desde[1])).normalize();
     dB.copy(puntoGeo(hasta[0], hasta[1])).normalize();
     qa.setFromUnitVectors(dA, dB);
     q.identity().slerp(qa, p);
     dir.copy(dA).applyQuaternion(q);
     const alt = Math.exp(THREE.MathUtils.lerp(Math.log(desde[2]), Math.log(hasta[2]), p));
-    posicionar(dir, alt, 0.5);
+    posicionar(dir, alt, inclinar);
+  }
+
+  // Nubes sobre Asia (1:7 "He aquí que viene con las nubes"): manchas suaves que pasan despacio.
+  const texNube = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const g = c.getContext('2d');
+    for (let i = 0; i < 14; i++) {
+      const x = 34 + Math.random() * 60;
+      const y = 40 + Math.random() * 48;
+      const r = 16 + Math.random() * 26;
+      const grad = g.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, 'rgba(255,255,255,0.55)');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 128, 128);
+    }
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  })();
+  const nubes = [];
+  for (let i = 0; i < 70; i++) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: texNube, transparent: true, opacity: 0, depthWrite: false }));
+    const lat = 36.2 + Math.random() * 3.6;
+    const lon = 25 + Math.random() * 5.5;
+    s.userData = { lat, lon, rapidez: 0.04 + Math.random() * 0.04 };
+    s.scale.setScalar(0.008 + Math.random() * 0.016);
+    s.renderOrder = 3; // después de las fotos satelitales, para que queden encima
+    escena.add(s);
+    nubes.push(s);
+  }
+  let nivelNubes = 0;
+  function nubesNivel(v) {
+    nivelNubes = v;
+  }
+  function actualizar(t) {
+    for (const s of nubes) {
+      s.visible = nivelNubes > 0;
+      if (!s.visible) continue;
+      s.position.copy(puntoGeo(s.userData.lat, s.userData.lon + t * s.userData.rapidez * 0.05, 1.006));
+      s.material.opacity = nivelNubes * 0.85;
+    }
   }
 
   // Resalta el nombre de una ciudad (los demás quedan tenues). null = todos iguales.
@@ -253,5 +296,5 @@ export function crearTierra() {
   }
 
   colocar(0);
-  return { escena, camara, estado, colocar, volar, resaltar, actualizarRotulos, mostrar, ajustarAspecto };
+  return { escena, camara, estado, colocar, volar, resaltar, actualizarRotulos, mostrar, ajustarAspecto, nubesNivel, actualizar };
 }

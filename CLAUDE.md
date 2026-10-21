@@ -10,7 +10,7 @@ El tono es reverente, cinematográfico y esperanzador. Nada de terror ni gore: l
 ## Plataforma y restricciones (no negociables)
 - Dispositivo principal de desarrollo y prueba: **Samsung Galaxy Z Fold 5** en Chrome para Android. Debe verse bien doblado (pantalla angosta, vertical) y desdoblado (casi cuadrado).
 - También debe funcionar en una laptop conectada a una TV.
-- Controles táctiles: el recorrido es **guiado** (la cámara avanza sola por un camino), el usuario solo toca para continuar y puede arrastrar para mirar alrededor. Botón de pausa. Modo **opcional** "Caminar" (pedido por Sebastián) con una palanca simple en pantalla para moverse siendo Juan; el modo guiado sigue siendo el principal. Jesús vuelve el rostro hacia Juan cuando este se mueve.
+- Controles táctiles: el recorrido es **guiado** (la cámara avanza sola por un camino), el usuario solo toca para continuar y puede arrastrar para mirar alrededor. Botón de pausa. Modo **opcional** "Caminar" (pedido por Sebastián) con una palanca simple en pantalla para moverse siendo Juan; el modo guiado sigue siendo el principal. Jesús vuelve el rostro hacia Juan cuando este se mueve. Botón "Desde fuera" (tercera persona): la cámara va detrás de Juan (figura de un anciano con túnica) y se le ve caer en 1:17.
 - Rendimiento: 30 fps estables en el Fold 5. Peso total por escena menor a 25 MB. Texturas en 1K o 2K comprimidas (KTX2/Basis o WebP), modelos en glTF/GLB con Draco.
 - Debe publicarse como sitio estático en **GitHub Pages**, abriéndose con un enlace.
 
@@ -43,10 +43,10 @@ CREDITS.md           licencia y origen de cada asset
 - Assets 3D y texturas: solo CC0 o licencias libres (Poly Haven, ambientCG, Sketchfab con licencia CC). Registrar cada uno en CREDITS.md.
 - Voz: inicialmente síntesis de voz en español como marcador; se reemplazará por una grabación real.
 
-## Escena 1: Patmos (Apocalipsis 1:9-20)
+## Escena 1: Apocalipsis 1 completo (1:1-20)
 **Objetivo:** que el visitante sienta que es Juan, desterrado, y de pronto se encuentra con Cristo glorificado.
 
-0. **Desde lo alto.** (Agregado por Sebastián.) Empieza en el espacio, sobre la Tierra, y desciende al mar Egeo, muestra las siete iglesias de Asia y termina sobre la isla de Patmos, para ubicar dónde ocurre todo.
+0. **Desde lo alto (1:1-8).** (Agregado por Sebastián.) Mientras se leen 1:1-8, empieza en el espacio sobre la Tierra (1:1-3), baja a Asia con las siete iglesias (1:4-6), pasan nubes (1:7: "viene con las nubes") y desciende a la isla de Patmos (1:8). El capítulo 1 queda completo.
 1. **Oscuridad y mar.** Pantalla negra. Se escucha el mar y viento. Texto en pantalla: "Yo Juan... estaba en la isla que es llamada Patmos" (1:9).
 2. **La cueva.** Fade in. Estamos dentro de una cueva de roca, en penumbra. Al fondo, la boca de la cueva deja ver el mar al atardecer. La cámara avanza lentamente hacia la luz.
 3. **La voz.** Al llegar a la entrada, un sonido grave y potente como de trompeta (1:10). La cámara se gira despacio hacia atrás.

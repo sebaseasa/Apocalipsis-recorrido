@@ -374,6 +374,9 @@ button:disabled {
   top: max(8px, env(safe-area-inset-top));
   right: 8px;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 64vw;
   gap: 6px;
   z-index: 5;
 }

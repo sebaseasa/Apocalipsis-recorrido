@@ -16,6 +16,7 @@ import { crearTierra } from './scenes/01-patmos/tierra.js';
 import { recorrido } from './scenes/01-patmos/guion.js';
 import { cartas, IGLESIAS } from './scenes/02-iglesias/guion.js';
 import { crearSimbolos } from './scenes/02-iglesias/simbolos.js';
+import { crearJuan } from './scenes/01-patmos/juan.js';
 
 const contenedor = document.getElementById('app');
 const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
@@ -30,6 +31,9 @@ mundo.tierra = crearTierra();
 mundo.vista = 'cueva';
 // Símbolos de las cartas (escena 2), en el mismo mundo de la cueva.
 mundo.simbolos = crearSimbolos(mundo.escena);
+// Juan, visible solo al ver desde fuera.
+const juan = crearJuan();
+mundo.escena.add(juan.grupo);
 
 const composer = new EffectComposer(renderer);
 const pasoEscena = new RenderPass(mundo.escena, cam.camara);
@@ -148,6 +152,17 @@ function fijarCaminar(valor) {
   botonCaminar.classList.toggle('activo', valor);
 }
 botonCaminar.addEventListener('click', () => fijarCaminar(!caminando));
+
+// Ver con los ojos de Juan, o desde fuera (detrás de él).
+const botonVista = document.getElementById('boton-vista');
+let desdeFuera = false;
+function fijarVista(valor) {
+  desdeFuera = valor;
+  cam.verDesdeFuera(valor);
+  botonVista.textContent = valor ? '👁 Ser Juan' : '👁 Desde fuera';
+  botonVista.classList.toggle('activo', valor);
+}
+botonVista.addEventListener('click', () => fijarVista(!desdeFuera));
 crearPalanca(palanca, (x, y) => cam.palanca(x, y));
 
 function limpiar() {
@@ -230,13 +245,22 @@ renderer.setAnimationLoop(() => {
   mundo.actualizar(t);
   mundo.simbolos.actualizar(t);
   // Jesús vuelve el rostro hacia Juan (sobre todo al caminar).
-  if (mundo.vista === 'cueva') mundo.figura.mirarHacia(cam.camara.position, dt);
+  if (mundo.vista === 'cueva') mundo.figura.mirarHacia(cam.ojo, dt);
   cam.actualizar(t, dt);
+  // Desde fuera: Juan ocupa el lugar de los ojos; si los ojos bajan al suelo, cae (1:17).
+  juan.grupo.visible = mundo.vista === 'cueva' && cam.tercera.mezcla > 0.05;
+  if (juan.grupo.visible) {
+    const caida = THREE.MathUtils.clamp((1.6 - cam.ojo.y) / 1.3, 0, 1);
+    juan.colocar(cam.ojo, cam.vista.giro, caida);
+  }
   const enTierra = mundo.vista === 'tierra';
   const escena = enTierra ? mundo.tierra.escena : mundo.escena;
   const camara = enTierra ? mundo.tierra.camara : cam.camara;
-  if (enTierra) mundo.tierra.actualizarRotulos();
-  else mundo.actualizarEtiquetas(cam.camara);
+  if (enTierra) {
+    mundo.tierra.actualizar(t);
+    mundo.tierra.actualizarRotulos();
+  }
+  if (!enTierra) mundo.actualizarEtiquetas(cam.camara);
   pasoEscena.scene = escena;
   pasoEscena.camera = camara;
   if (usarBrillo) composer.render();

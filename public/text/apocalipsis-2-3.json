@@ -2,7 +2,7 @@
   "version": "Reina-Valera 1909 (dominio público)",
   "fuente": "eBible.org, spaRV1909 (texto USFM), copiado sin cambios",
   "versiculos": {
-    "2:1": "ESCRIBE al ángel de la iglesia en EFESO: El que tiene las siete estrellas en su diestra, el cual anda en medio de los siete candeleros de oro, dice estas cosas:",
+    "2:1": "Escribe al ángel de la iglesia en EFESO: El que tiene las siete estrellas en su diestra, el cual anda en medio de los siete candeleros de oro, dice estas cosas:",
     "2:2": "Yo sé tus obras, y tu trabajo y paciencia; y que tú no puedes sufrir los malos, y has probado á los que se dicen ser apóstoles, y no lo son, y los has hallado mentirosos;",
     "2:3": "Y has sufrido, y has tenido paciencia, y has trabajado por mi nombre, y no has desfallecido.",
     "2:4": "Pero tengo contra ti que has dejado tu primer amor.",
@@ -31,7 +31,7 @@
     "2:27": "Y las regirá con vara de hierro, y serán quebrantados como vaso de alfarero, como también yo he recibido de mi Padre:",
     "2:28": "Y le daré la estrella de la mañana.",
     "2:29": "El que tiene oído, oiga lo que el Espíritu dice á las iglesias.",
-    "3:1": "Y ESCRIBE al ángel de la iglesia en SARDIS: El que tiene los siete Espíritus de Dios, y las siete estrellas, dice estas cosas: Yo conozco tus obras, que tienes nombre que vives, y estás muerto.",
+    "3:1": "Y escribe al ángel de la iglesia en SARDIS: El que tiene los siete Espíritus de Dios, y las siete estrellas, dice estas cosas: Yo conozco tus obras, que tienes nombre que vives, y estás muerto.",
     "3:2": "Sé vigilante y confirma las otras cosas que están para morir; porque no he hallado tus obras perfectas delante de Dios.",
     "3:3": "Acuérdate pues de lo que has recibido y has oído, y guárdalo, y arrepiéntete. Y si no velares, vendré á ti como ladrón, y no sabrás en qué hora vendré á ti.",
     "3:4": "Mas tienes unas pocas personas en Sardis que no han ensuciado sus vestiduras: y andarán conmigo en vestiduras blancas; porque son dignos.",
@@ -53,5 +53,6 @@
     "3:20": "He aquí, yo estoy á la puerta y llamo: si alguno oyere mi voz y abriere la puerta, entraré á él, y cenaré con él, y él conmigo.",
     "3:21": "Al que venciere, yo le daré que se siente conmigo en mi trono; así como yo he vencido, y me he sentado con mi Padre en su trono.",
     "3:22": "El que tiene oído, oiga lo que el Espíritu dice á las iglesias."
-  }
+  },
+  "nota_mayusculas": "La primera palabra de cada capítulo viene en mayúsculas en la edición impresa (costumbre tipográfica); aquí se escribe con mayúscula inicial normal."
 }

@@ -1,6 +1,6 @@
-# Guion de voces · Apocalipsis 1:9-20
+# Guion de voces · Apocalipsis 1 (1:1-20)
 
-Para generar en ElevenLabs. Son **2 voces** y **25 frases**, más una opcional.
+Para generar en ElevenLabs. Son **2 voces** y **33 frases** (8 de 1:1-8 y 25 de 1:9-20), más una opcional.
 Cada frase es **un archivo MP3 aparte**, con el nombre exacto de la columna "Archivo".
 
 ## Las dos voces
@@ -22,6 +22,22 @@ Consejos:
 La columna **"Texto para ElevenLabs"** tiene pequeños cambios solo para que pronuncie bien
 (por ejemplo "Alfa" en vez de "Alpha", "Tiatira" en vez de "Thiatira").
 Los subtítulos en pantalla siguen con la ortografía original de la Reina-Valera 1909.
+
+
+## Primero: Apocalipsis 1:1-8 (se leen al bajar desde el espacio)
+
+| # | Archivo | Voz | Cita | Texto para ElevenLabs |
+|---|---------|-----|------|------------------------|
+| P1 | `voz-p01.mp3` | Narrador | 1:1 | La revelación de Jesucristo, que Dios le dio, para manifestar a sus siervos las cosas que deben suceder presto; y la declaró, enviándola por su ángel a Juan su siervo, |
+| P2 | `voz-p02.mp3` | Narrador | 1:2 | El cual ha dado testimonio de la palabra de Dios, y del testimonio de Jesucristo, y de todas las cosas que ha visto. |
+| P3 | `voz-p03.mp3` | Narrador | 1:3 | Bienaventurado el que lee, y los que oyen las palabras de esta profecía, y guardan las cosas en ella escritas: porque el tiempo está cerca. |
+| P4 | `voz-p04.mp3` | Narrador | 1:4 | Juan a las siete iglesias que están en Asia: Gracia sea con vosotros, y paz del que es y que era y que ha de venir, y de los siete Espíritus que están delante de su trono; |
+| P5 | `voz-p05.mp3` | Narrador | 1:5 | Y de Jesucristo, el testigo fiel, el primogénito de los muertos, y príncipe de los reyes de la tierra. Al que nos amó, y nos ha lavado de nuestros pecados con su sangre, |
+| P6 | `voz-p06.mp3` | Narrador | 1:6 | Y nos ha hecho reyes y sacerdotes para Dios y su Padre; a él sea gloria e imperio para siempre jamás. Amén. |
+| P7 | `voz-p07.mp3` | Narrador | 1:7 | He aquí que viene con las nubes, y todo ojo le verá, y los que le traspasaron; y todos los linajes de la tierra se lamentarán sobre él. Así sea. Amén. |
+| P8 | `voz-p08.mp3` | Cristo | 1:8 | Yo soy el Alfa y la Omega, principio y fin, dice el Señor, que es y que era y que ha de venir, el Todopoderoso. |
+
+## Después: Apocalipsis 1:9-20
 
 | # | Archivo | Voz | Cita | Texto para ElevenLabs |
 |---|---------|-----|------|------------------------|

@@ -26,6 +26,10 @@ export function crearCamaraGuiada() {
   // En este modo la mirada es totalmente libre (giro completo); al apagarlo vuelve al guion.
   const libre = { activo: false, x: 0, y: 0, mezcla: 0, giro: 0, inclinacion: 0, desplazamiento: new THREE.Vector3() };
   const vista = { giro: 0, inclinacion: 0 }; // lo que se ve ahora (para empezar a caminar sin saltos)
+  // Desde fuera (tercera persona): la cámara va detrás de Juan, que ocupa el lugar de los ojos.
+  const tercera = { activo: false, mezcla: 0 };
+  const ojo = new THREE.Vector3(); // dónde están los ojos de Juan
+  const atras = new THREE.Vector3();
   const adelante = new THREE.Vector3();
   const derecha = new THREE.Vector3();
   let sensibilidad = 0.004;
@@ -102,6 +106,27 @@ export function crearCamaraGuiada() {
       ty = (Math.sin(t * 41) + Math.sin(t * 29)) * 0.004 * guia.temblor;
     }
     camara.rotation.set(incFinal + ty, giroFinal + tx, guia.ladeo);
+
+    // Desde fuera: detrás de Juan y un poco más alto, mirando hacia donde él mira.
+    ojo.copy(camara.position);
+    tercera.mezcla += ((tercera.activo ? 1 : 0) - tercera.mezcla) * Math.min(1, dt * 2);
+    if (tercera.mezcla > 0.001) {
+      const m = tercera.mezcla;
+      // Detrás y un poco a la derecha (por encima del hombro), para no tapar lo que mira.
+      atras.set(Math.sin(giroFinal), 0, Math.cos(giroFinal)).multiplyScalar(2.3);
+      atras.x += Math.cos(giroFinal) * 0.75;
+      atras.z += -Math.sin(giroFinal) * 0.75;
+      atras.add(ojo);
+      atras.y = 1.25 + ojo.y * 0.35;
+      atras.x = THREE.MathUtils.clamp(atras.x, -3.4, 3.4);
+      atras.z = THREE.MathUtils.clamp(atras.z, -18.8, 4.8);
+      camara.position.lerp(atras, m);
+      camara.rotation.set(
+        THREE.MathUtils.lerp(incFinal, incFinal * 0.5 - 0.16, m) + ty,
+        giroFinal + tx,
+        THREE.MathUtils.lerp(guia.ladeo, 0, m)
+      );
+    }
   }
 
   // En pantallas angostas (Fold doblado) se abre el campo de visión
@@ -131,5 +156,12 @@ export function crearCamaraGuiada() {
     if (!activo) palanca(0, 0);
   }
 
-  return { camara, guia, arrastrar, actualizar, ajustarAspecto, palanca, caminar };
+  function verDesdeFuera(activo) {
+    tercera.activo = activo;
+  }
+
+  return {
+    camara, guia, arrastrar, actualizar, ajustarAspecto, palanca, caminar, verDesdeFuera,
+    ojo, vista, tercera,
+  };
 }

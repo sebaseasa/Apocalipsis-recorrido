@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { animar, esperar, lineal } from '../../core/tiempo.js';
-import { leer, ocultarSubtitulo, mostrarSubtitulo } from '../../core/subtitulos.js';
+import { leer, ocultarSubtitulo, mostrarSubtitulo, leerVersiculo, duracionVersiculo } from '../../core/subtitulos.js';
 import { esperarToque } from '../../core/controles.js';
 import * as audio from '../../core/audio.js';
 import { fundido, mostrarPaso, mostrarCierre, tocarCalidez, reiniciarCalidez } from '../../core/pantalla.js';
 
-// Guion de la escena 1 (Apocalipsis 1:9-20), en 8 momentos, con una introducción desde el espacio.
+// Apocalipsis 1 completo: 1:1-8 desde el espacio hasta Patmos, y 1:9-20 en la cueva (8 momentos).
 // Al final de cada momento aparece "Toca para continuar".
 
 const ALTURA_OJOS = 1.6;
@@ -47,22 +47,45 @@ export async function recorrido(mundo, cam) {
   reiniciarCalidez();
   fundido('negro', 1, 0);
 
-  // 1a. Desde lo alto: la Tierra, el mar Egeo, las siete iglesias y la isla de Patmos.
+  // 1a. Desde lo alto (1:1-8): la Tierra desde el espacio, Asia con sus siete iglesias,
+  //     las nubes (1:7) y el descenso hasta la isla de Patmos.
   mostrarPaso(1);
   const tierra = mundo.tierra;
+  const ESPACIO = [38, 12, 2.6];
+  const MEDITERRANEO = [37, 22, 1.1];
+  const ASIA = [38.25, 27.9, 0.055];
+  const ASIA_2 = [38.15, 27.8, 0.05];
+  const PATMOS = [37.31, 26.55, 0.0019];
   mundo.vista = 'tierra';
-  tierra.colocar(0);
+  tierra.volar(ESPACIO, ESPACIO, 1, 0);
+  tierra.nubesNivel(0);
   tierra.mostrar(true);
   audio.silencio(false, 0.5);
   audio.nivel('ambiente', 0, 0.5);
   audio.nivel('musica', 0.45, 6);
-  fundido('negro', 0, 3);
-  const bajar = animar(34, (p) => tierra.colocar(p), lineal);
-  await esperar(4);
-  mostrarSubtitulo('¿Dónde ocurre esto?', 'En el mar Egeo, entre Grecia y Asia Menor (hoy Turquía).');
-  await esperar(10);
-  mostrarSubtitulo('Las siete iglesias de Asia (1:11)', 'En la costa de Asia estaban las siete iglesias a las que Juan escribió.');
-  await esperar(10);
+  await fundido('negro', 0, 3);
+  const leerVarios = async (refs) => {
+    for (const r of refs) await leerVersiculo(r, 0.5);
+  };
+  const duran = (refs) => refs.reduce((a, r) => a + duracionVersiculo(r, 0.5), 0);
+
+  // "La revelación de Jesucristo…" (1:1-3): la Tierra vista desde el espacio.
+  const prologo = ['1:1', '1:2', '1:3'];
+  await juntos(leerVarios(prologo), animar(duran(prologo), (p) => tierra.volar(ESPACIO, MEDITERRANEO, p, 0)));
+
+  // "Juan á las siete iglesias que están en Asia" (1:4): bajamos hasta Asia.
+  await juntos(leerVersiculo('1:4', 0.5), animar(duran(['1:4']), (p) => tierra.volar(MEDITERRANEO, ASIA, p, p * 0.5)));
+
+  // 1:5-6: sobre Asia.
+  await juntos(leerVarios(['1:5', '1:6']), animar(duran(['1:5', '1:6']), (p) => tierra.volar(ASIA, ASIA_2, p)));
+
+  // "He aquí que viene con las nubes" (1:7).
+  await juntos(leerVersiculo('1:7', 0.5), animar(4, (p) => tierra.nubesNivel(p)));
+
+  // "Yo soy el Alpha y la Omega…" (1:8): las nubes se apartan y descendemos a Patmos.
+  const bajar = animar(duran(['1:8']) + 8, (p) => tierra.volar(ASIA_2, PATMOS, p, 0.5 + 0.5 * p));
+  animar(5, (p) => tierra.nubesNivel(1 - p));
+  await leerVersiculo('1:8', 0.5);
   mostrarSubtitulo('La isla de Patmos', 'Una isla pequeña y rocosa, a unos 100 km de Efeso. Allí estaba Juan, desterrado.');
   await bajar;
   await esperar(3);

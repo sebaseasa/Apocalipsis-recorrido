@@ -40,6 +40,11 @@ export function partesDe(ref) {
   return versiculos[ref]?.length ?? 0;
 }
 
+// Cuánto dura leer un versículo completo (para que un movimiento dure lo mismo).
+export function duracionVersiculo(ref, extra = 0) {
+  return (versiculos[ref] ?? []).reduce((suma, parte) => suma + tiempoLectura(parte), 0) + extra;
+}
+
 // Lee un versículo completo, parte por parte.
 export async function leerVersiculo(ref, extra = 0) {
   const n = partesDe(ref);
