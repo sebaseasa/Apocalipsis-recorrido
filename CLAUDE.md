@@ -44,6 +44,7 @@ CREDITS.md           licencia y origen de cada asset
 ## Escena 1: Patmos (Apocalipsis 1:9-20)
 **Objetivo:** que el visitante sienta que es Juan, desterrado, y de pronto se encuentra con Cristo glorificado.
 
+0. **Desde lo alto.** (Agregado por Sebastián.) Empieza en el espacio, sobre la Tierra, y desciende al mar Egeo, muestra las siete iglesias de Asia y termina sobre la isla de Patmos, para ubicar dónde ocurre todo.
 1. **Oscuridad y mar.** Pantalla negra. Se escucha el mar y viento. Texto en pantalla: "Yo Juan... estaba en la isla que es llamada Patmos" (1:9).
 2. **La cueva.** Fade in. Estamos dentro de una cueva de roca, en penumbra. Al fondo, la boca de la cueva deja ver el mar al atardecer. La cámara avanza lentamente hacia la luz.
 3. **La voz.** Al llegar a la entrada, un sonido grave y potente como de trompeta (1:10). La cámara se gira despacio hacia atrás.

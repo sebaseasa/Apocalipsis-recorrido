@@ -61,7 +61,7 @@ export function crearFigura(posicion) {
     uPies: { value: 0 },
   };
   const tela = new THREE.MeshStandardMaterial({
-    color: 0xf6f1e8, roughness: 0.55, metalness: 0, emissive: 0xfff3df, emissiveIntensity: 0.07, transparent: true, opacity: 0,
+    color: 0xffffff, roughness: 0.55, metalness: 0, emissive: 0xfff3df, emissiveIntensity: 0.07, transparent: true, opacity: 0,
   });
   tela.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, extra);
@@ -71,14 +71,31 @@ export function crearFigura(posicion) {
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vLocal;\nuniform float uBorde;\nuniform float uCabello;\nuniform float uPies;')
       .replace(
+        '#include <color_fragment>',
+        `#include <color_fragment>
+        // Colores por zona: túnica de lino, cabello y barba blancos como la nieve,
+        // rostro y manos con tono de piel. (Medidas en metros sobre la escultura.)
+        float enCabeza = smoothstep(1.58, 1.64, vLocal.y);
+        float cara = smoothstep(0.045, 0.075, vLocal.z)
+          * (1.0 - smoothstep(0.05, 0.075, abs(vLocal.x + 0.02)))
+          * smoothstep(1.735, 1.76, vLocal.y) * (1.0 - smoothstep(1.86, 1.89, vLocal.y));
+        float manos = smoothstep(0.37, 0.4, abs(vLocal.x))
+          * smoothstep(0.76, 0.8, vLocal.y) * (1.0 - smoothstep(1.1, 1.15, vLocal.y));
+        float piel = max(cara, manos);
+        vec3 zona = mix(vec3(0.86, 0.82, 0.74), vec3(1.0), enCabeza);
+        zona = mix(zona, vec3(0.74, 0.52, 0.38), piel);
+        diffuseColor.rgb *= zona;`
+      )
+      .replace(
         '#include <emissivemap_fragment>',
         `#include <emissivemap_fragment>
+        totalEmissiveRadiance *= zona;
         // Bordes que resplandecen, como luz que envuelve la figura.
         float borde = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewPosition))), 2.5);
         totalEmissiveRadiance += vec3(1.0, 0.96, 0.88) * borde * uBorde;
         // Cabeza y cabellos blancos como la nieve (1:14).
         // (el rostro, al frente, se ilumina menos para que se siga viendo)
-        float cabeza = smoothstep(1.56, 1.69, vLocal.y) * (1.0 - 0.8 * smoothstep(0.0, 0.07, vLocal.z));
+        float cabeza = enCabeza * (1.0 - piel);
         totalEmissiveRadiance += vec3(1.0) * cabeza * uCabello * 1.2;
         // Pies ardientes como en un horno (1:15).
         float pie = 1.0 - smoothstep(0.0, 0.16, vLocal.y);
@@ -105,7 +122,7 @@ export function crearFigura(posicion) {
   });
   const cinto = new THREE.Mesh(new THREE.TorusGeometry(1, 0.12, 10, 48), oro);
   cinto.rotation.x = Math.PI / 2;
-  cinto.scale.set(0.24, 0.17, 0.2); // ancho, fondo, grosor
+  cinto.scale.set(0.215, 0.16, 0.2); // ancho, fondo, grosor
   cinto.position.set(-0.01, 1.33, -0.03);
 
   // Resplandor del rostro: "como el sol" (sin mostrar facciones).
@@ -215,12 +232,12 @@ export function crearFigura(posicion) {
     grupo.visible = p > 0;
 
     tela.opacity = p;
-    tela.emissiveIntensity = 0.07 + e.sol * 0.45;
-    extra.uBorde.value = 0.45 + e.sol * 0.8;
+    tela.emissiveIntensity = 0.06 + e.sol * 0.4;
+    extra.uBorde.value = 0.3 + e.sol * 0.7;
     extra.uCabello.value = e.cabello;
     oro.opacity = p;
     oro.emissiveIntensity = 0.15 * p + e.cinto * 1.2;
-    luzFrente.intensity = p * 9;
+    luzFrente.intensity = p * 5;
     brilloCabello.material.opacity = e.cabello * 0.35;
 
     const llama = 0.85 + Math.sin(t * 11) * 0.1 + Math.sin(t * 27) * 0.05;
@@ -238,11 +255,11 @@ export function crearFigura(posicion) {
 
     // Halo: tenue mientras se describen los detalles, fuerte cuando "resplandece".
     const pulso = 1 + Math.sin(t * 1.3) * 0.04;
-    aura.material.opacity = (p * 0.3 + e.sol * 0.45) * pulso;
+    aura.material.opacity = (p * 0.14 + e.sol * 0.4) * pulso;
     // Halo del rostro: casi nada de base (para ver su rostro); fuerte solo cuando "resplandece".
     halo.material.opacity = p * 0.08 + e.sol * 0.55;
     halo.scale.setScalar(0.4 + e.sol * 2.2);
-    rayos.material.opacity = (p * 0.18 + e.sol * 0.35) * pulso;
+    rayos.material.opacity = (p * 0.09 + e.sol * 0.32) * pulso;
     rayos.material.rotation = t * 0.03;
     luz.intensity = p * 2 + e.sol * 2;
 

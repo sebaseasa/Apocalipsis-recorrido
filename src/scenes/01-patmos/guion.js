@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { animar, esperar, lineal } from '../../core/tiempo.js';
-import { leer, ocultarSubtitulo } from '../../core/subtitulos.js';
+import { leer, ocultarSubtitulo, mostrarSubtitulo } from '../../core/subtitulos.js';
 import { esperarToque } from '../../core/controles.js';
 import * as audio from '../../core/audio.js';
 import { fundido, mostrarPaso, mostrarCierre, tocarCalidez, reiniciarCalidez } from '../../core/pantalla.js';
@@ -46,11 +46,33 @@ export async function recorrido(mundo, cam) {
   reiniciarCalidez();
   fundido('negro', 1, 0);
 
-  // 1. Oscuridad y mar.
+  // 1a. Desde lo alto: la Tierra, el mar Egeo, las siete iglesias y la isla de Patmos.
   mostrarPaso(1);
+  const tierra = mundo.tierra;
+  mundo.vista = 'tierra';
+  tierra.colocar(0);
+  tierra.mostrar(true);
   audio.silencio(false, 0.5);
+  audio.nivel('ambiente', 0, 0.5);
+  audio.nivel('musica', 0.45, 6);
+  fundido('negro', 0, 3);
+  const bajar = animar(34, (p) => tierra.colocar(p), lineal);
+  await esperar(4);
+  mostrarSubtitulo('¿Dónde ocurre esto?', 'En el mar Egeo, entre Grecia y Asia Menor (hoy Turquía).');
+  await esperar(10);
+  mostrarSubtitulo('Las siete iglesias de Asia (1:11)', 'En la costa de Asia estaban las siete iglesias a las que Juan escribió.');
+  await esperar(10);
+  mostrarSubtitulo('La isla de Patmos', 'Una isla pequeña y rocosa, a unos 100 km de Éfeso. Allí estaba Juan, desterrado.');
+  await bajar;
+  await esperar(3);
+  await fundido('negro', 1, 2.5);
+  tierra.mostrar(false);
+  mundo.vista = 'cueva';
+  ocultarSubtitulo();
+
+  // 1b. Oscuridad y mar.
+  audio.nivel('musica', 0, 2);
   audio.nivel('ambiente', 0.5, 4);
-  audio.nivel('musica', 0, 1);
   await esperar(2.5);
   await leer('1:9', 0);
   await leer('1:9', 1);

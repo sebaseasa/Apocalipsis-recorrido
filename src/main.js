@@ -12,6 +12,7 @@ import { ocultarCierre } from './core/pantalla.js';
 import { iniciarAudio } from './core/audio.js';
 import { todoCargado, alProgreso } from './core/cargador.js';
 import { crearEscena } from './scenes/01-patmos/escena.js';
+import { crearTierra } from './scenes/01-patmos/tierra.js';
 import { recorrido } from './scenes/01-patmos/guion.js';
 
 const contenedor = document.getElementById('app');
@@ -22,10 +23,14 @@ contenedor.appendChild(renderer.domElement);
 
 const mundo = crearEscena();
 const cam = crearCamaraGuiada();
+// Introducción desde el espacio; el guion decide cuál de las dos vistas se dibuja.
+mundo.tierra = crearTierra();
+mundo.vista = 'cueva';
 
 const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(mundo.escena, cam.camara));
-const brillo = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.9, 0.6, 0.8);
+const pasoEscena = new RenderPass(mundo.escena, cam.camara);
+composer.addPass(pasoEscena);
+const brillo = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.75, 0.6, 0.82);
 composer.addPass(brillo);
 composer.addPass(new OutputPass());
 
@@ -43,6 +48,7 @@ function alCambiarTamano() {
   // El brillo se calcula a menor resolución para ahorrar trabajo.
   brillo.resolution.set(w * pr * 0.5, h * pr * 0.5);
   cam.ajustarAspecto(w / h);
+  mundo.tierra.ajustarAspecto(w / h);
   mundo.atmosfera.ajustarPantalla(h * pr);
 }
 
@@ -71,6 +77,7 @@ Promise.all([cargarTexto(`${import.meta.env.BASE_URL}text/apocalipsis-1.json`), 
     mundo.prepararReflejos(renderer);
     // Preparar los sombreadores antes de entrar, para que no haya tirones al empezar.
     renderer.compile(mundo.escena, cam.camara);
+    renderer.compile(mundo.tierra.escena, mundo.tierra.camara);
     botonEntrar.disabled = false;
     botonEntrar.textContent = 'Entrar';
   })
@@ -121,6 +128,12 @@ renderer.setAnimationLoop(() => {
   actualizarTiempo(dt * velocidad);
   mundo.actualizar(t);
   cam.actualizar(t, dt);
+  const enTierra = mundo.vista === 'tierra';
+  const escena = enTierra ? mundo.tierra.escena : mundo.escena;
+  const camara = enTierra ? mundo.tierra.camara : cam.camara;
+  if (enTierra) mundo.tierra.actualizarRotulos();
+  pasoEscena.scene = escena;
+  pasoEscena.camera = camara;
   if (usarBrillo) composer.render();
-  else renderer.render(mundo.escena, cam.camara);
+  else renderer.render(escena, camara);
 });
