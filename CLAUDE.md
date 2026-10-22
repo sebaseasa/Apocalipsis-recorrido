@@ -70,7 +70,7 @@ Código en `src/scenes/04-trono/`, texto en `public/text/apocalipsis-4.json`. Mi
 - 4:1 de noche, se abre una puerta de luz en el cielo; voz como de trompeta; Juan sube y entra en la luz.
 - El que está sentado en el trono se ve solo como luz de jaspe (clara como cristal) y sardio (roja), sin forma humana; arco alrededor del trono como esmeralda.
 - 24 ancianos sentados en sillas, de blanco y con coronas de oro; relámpagos y truenos; siete lámparas de fuego; mar de vidrio; cuatro seres vivientes (león, becerro, cara de hombre, águila volando) con seis alas y llenos de ojos (pequeños, como joyas, sin asustar).
-- 4:10 los ancianos se postran y echan sus coronas delante del trono. Cierre con el grabado de Durero "San Juan ante Dios y los ancianos" (1498) y una pregunta (pendiente de aprobación).
+- 4:10 los ancianos se postran y echan sus coronas delante del trono. Cierre con el grabado de Durero "San Juan ante Dios y los ancianos" (1498) y la pregunta aprobada: "Los ancianos ponen sus coronas delante del trono. ¿Qué quiero poner yo hoy delante de Dios?"
 
 ## Forma de trabajo
 1. Primero, montar el proyecto vacío y publicarlo en GitHub Pages para confirmar que el enlace abre en el Fold 5.
